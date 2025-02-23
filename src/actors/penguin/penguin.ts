@@ -1,7 +1,7 @@
-import { Config } from '../../config';
-import { Level } from '../../level';
-import { Resources } from '../../resources';
-import { Pipe } from '../pipe/pipe';
+import { Pipe } from '@/actors/pipe/pipe';
+import { Config } from '@/config';
+import { Resources } from '@/resources';
+import { Level } from '@/scenes/level';
 import * as ex from 'excalibur';
 
 export class Penguin extends ex.Actor {

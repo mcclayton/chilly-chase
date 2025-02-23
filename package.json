@@ -11,10 +11,12 @@
   "author": "Michael Clayton",
   "license": "ISC",
   "devDependencies": {
+    "@vanilla-extract/vite-plugin": "^5.0.1",
     "typescript": "5.7.3",
     "vite": "6.1.1"
   },
   "dependencies": {
-    "excalibur": "0.30.3"
+    "excalibur": "0.30.3",
+    "vite-plugin-checker": "^0.9.0"
   }
 }

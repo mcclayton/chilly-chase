@@ -1,5 +1,5 @@
-import { Config } from '../../config';
-import { Resources } from '../../resources';
+import { Config } from '@/config';
+import { Resources } from '@/resources';
 import * as ex from 'excalibur';
 
 export class Pipe extends ex.Actor {

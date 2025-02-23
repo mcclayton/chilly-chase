@@ -1,7 +1,7 @@
-import { Config } from '../../config';
-import { Level } from '../../scenes/level';
-import { ScoreTrigger } from '../../score-trigger';
 import { Pipe } from './pipe';
+import { Config } from '@/config';
+import { Level } from '@/scenes/level';
+import { ScoreTrigger } from '@/score-trigger';
 import * as ex from 'excalibur';
 
 export class PipeFactory {
