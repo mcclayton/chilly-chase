@@ -1,3 +1,5 @@
+import { Ice } from '../ice/ice';
+import { Snowball } from '../snowball/snowball';
 import { Pipe } from '@/actors/pipe/pipe';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
@@ -8,6 +10,7 @@ export class Penguin extends ex.Actor {
   playing = false;
   walkAnimation!: ex.Animation;
   startSprite!: ex.Sprite;
+  private timeSinceLastIce = 0;
 
   constructor(private level: Level) {
     super({
@@ -18,43 +21,82 @@ export class Penguin extends ex.Actor {
     this.level = level;
   }
 
-  override onInitialize(): void {
+  override onInitialize(engine: ex.Engine): void {
+    engine.input.pointers.primary.on('down', (evt) => {
+      const snowball = new Snowball(this, evt.worldPos.sub(this.pos));
+      this.level.add(snowball);
+    });
+
     this.initSprites();
     this.on('exitviewport', () => {
       this.level.triggerGameOver();
     });
   }
 
-  override onPostUpdate(engine: ex.Engine): void {
+  override onPostUpdate(engine: ex.Engine, delta: number): void {
     if (!this.playing) return;
 
-    if (engine.input.keyboard.isHeld(ex.Keys.ArrowLeft)) {
+    // Accumulate time since last Ice creation
+    const deltaSeconds = delta / 1000;
+    this.timeSinceLastIce += deltaSeconds;
+
+    if (
+      engine.input.keyboard.isHeld(ex.Keys.Space) &&
+      this.timeSinceLastIce >= 0.05
+    ) {
+      const snowball = new Ice(this);
+      this.level.add(snowball);
+      // Reset ice timer
+      this.timeSinceLastIce = 0;
+    }
+
+    if (
+      [ex.Keys.ArrowLeft, ex.Keys.A].some((k) =>
+        engine.input.keyboard.isHeld(k),
+      )
+    ) {
       // Move Left
       this.vel.x -= Config.Player.Acceleration;
       this.walkAnimation.flipHorizontal = false;
       this.graphics.use('walk');
-    } else if (engine.input.keyboard.isHeld(ex.Keys.ArrowRight)) {
+    } else if (
+      [ex.Keys.ArrowRight, ex.Keys.D].some((k) =>
+        engine.input.keyboard.isHeld(k),
+      )
+    ) {
       // Move Right
       this.vel.x += Config.Player.Acceleration;
       this.walkAnimation.flipHorizontal = true;
       this.graphics.use('walk');
     }
 
-    if (engine.input.keyboard.isHeld(ex.Keys.ArrowUp)) {
+    if (
+      [ex.Keys.ArrowUp, ex.Keys.W].some((k) => engine.input.keyboard.isHeld(k))
+    ) {
       // Move Up
       this.vel.y -= Config.Player.Acceleration;
       this.graphics.use('walk');
-    } else if (engine.input.keyboard.isHeld(ex.Keys.ArrowDown)) {
+    } else if (
+      [ex.Keys.ArrowDown, ex.Keys.S].some((k) =>
+        engine.input.keyboard.isHeld(k),
+      )
+    ) {
       // Move Down
       this.graphics.use('walk');
       this.vel.y += Config.Player.Acceleration;
     }
 
     if (
-      !engine.input.keyboard.isHeld(ex.Keys.ArrowDown) &&
-      !engine.input.keyboard.isHeld(ex.Keys.ArrowUp) &&
-      !engine.input.keyboard.isHeld(ex.Keys.ArrowLeft) &&
-      !engine.input.keyboard.isHeld(ex.Keys.ArrowRight)
+      ![
+        ex.Keys.ArrowDown,
+        ex.Keys.ArrowUp,
+        ex.Keys.ArrowLeft,
+        ex.Keys.ArrowRight,
+        ex.Keys.W,
+        ex.Keys.A,
+        ex.Keys.S,
+        ex.Keys.D,
+      ].some((k) => engine.input.keyboard.isHeld(k))
     ) {
       this.graphics.use('start');
       // Preserve flip state

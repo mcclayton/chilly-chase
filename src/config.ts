@@ -12,6 +12,11 @@ export const Config = {
     MinVelocity: -200,
     MaxVelocity: 200,
   },
+  Snowball: {
+    Radius: 4,
+    InitialSpeed: 600,
+    Deceleration: 300,
+  },
   Enemy: {
     Acceleration: 5,
     Deceleration: 1,
