@@ -2,6 +2,8 @@ import { Penguin } from '../actors/penguin/penguin';
 import { Pipe } from '../actors/pipe/pipe';
 import { PipeFactory } from '../actors/pipe/pipe-factory';
 import { Config } from '../config';
+import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
+import { MeterBar } from '@/screenElements/iceMeter/meterBar';
 import * as ex from 'excalibur';
 
 export class Level extends ex.Scene {
@@ -36,7 +38,7 @@ export class Level extends ex.Scene {
 
   bestLabel = new ex.Label({
     text: 'Best: 0',
-    x: 400,
+    x: 200,
     y: 0,
     z: 1,
     font: new ex.Font({
@@ -49,6 +51,9 @@ export class Level extends ex.Scene {
   override onInitialize(engine: ex.Engine): void {
     this.add(this.penguin);
     this.showStartInstructions();
+
+    const iceMeter = new IceMeter(300, 0, 200, 20);
+    this.add(iceMeter);
 
     this.add(this.scoreLabel);
     this.add(this.bestLabel);

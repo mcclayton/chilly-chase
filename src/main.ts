@@ -6,7 +6,7 @@ import * as ex from 'excalibur';
 const game = new ex.Engine({
   width: Config.Screen.Width,
   height: Config.Screen.Height,
-  backgroundColor: ex.Color.fromHex('#54C0CA'),
+  backgroundColor: ex.Color.fromHex('#bad4f0'),
   pixelArt: true,
   pixelRatio: 2,
   displayMode: ex.DisplayMode.FitScreen,
