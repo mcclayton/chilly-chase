@@ -3,7 +3,6 @@ import { Pipe } from '../actors/pipe/pipe';
 import { PipeFactory } from '../actors/pipe/pipe-factory';
 import { Config } from '../config';
 import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
-import { MeterBar } from '@/screenElements/iceMeter/meterBar';
 import * as ex from 'excalibur';
 
 export class Level extends ex.Scene {
@@ -12,9 +11,10 @@ export class Level extends ex.Scene {
   penguin = new Penguin(this);
   score: number = 0;
   best: number = 0;
+  iceMeter!: IceMeter;
 
   startGameLabel = new ex.Label({
-    text: 'Tap to Start',
+    text: 'Click to Start',
     x: 200,
     y: 200,
     z: 3,
@@ -52,7 +52,8 @@ export class Level extends ex.Scene {
     this.add(this.penguin);
     this.showStartInstructions();
 
-    const iceMeter = new IceMeter(300, 0, 200, 20);
+    const iceMeter = new IceMeter(300, 0);
+    this.iceMeter = iceMeter;
     this.add(iceMeter);
 
     this.add(this.scoreLabel);
@@ -73,7 +74,6 @@ export class Level extends ex.Scene {
       this.reset();
       this.startGameLabel.graphics.isVisible = false;
       this.penguin.start();
-      // this.pipeFactory.start();
     });
   }
 
@@ -93,6 +93,10 @@ export class Level extends ex.Scene {
   incrementScore() {
     this.scoreLabel.text = `Score: ${++this.score}`;
     this.setBestScore(this.score);
+  }
+
+  getIceMeter() {
+    return this.iceMeter;
   }
 
   setBestScore(score: number) {

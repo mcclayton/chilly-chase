@@ -1,38 +1,39 @@
 import * as ex from 'excalibur';
 
+const border = 2;
+
 export class IceMeter extends ex.ScreenElement {
-  private barWidth: number; // Full width of the meter
+  private barWidth: number;
   private barHeight: number;
-  private currentValue: number = 1; // 1.0 means 100% filled
+  private currentValue: number = 1; // Number between 0 and 1 where 1 = 100%
 
-  // The "fill" graphic that shrinks/grows
   private fillRect: ex.Rectangle;
+  private backgroundRect: ex.Rectangle;
 
-  constructor(x: number, y: number, width: number, height: number) {
+  constructor(x: number, y: number) {
     super({ x, y, z: 1 });
 
-    this.barWidth = width;
-    this.barHeight = height;
+    this.barWidth = 200;
+    this.barHeight = 20;
 
-    // 1) Optional: a background rectangle with rounded corners, border, etc.
-    const backgroundRect = new ex.Rectangle({
+    this.backgroundRect = new ex.Rectangle({
       width: this.barWidth,
       height: this.barHeight,
-      color: ex.Color.Black, // Fill color
-      strokeColor: ex.Color.White, // Border color
-      lineWidth: 2, // Border thickness
+      color: ex.Color.Black,
+      strokeColor: ex.Color.White,
+      lineWidth: 2,
     });
 
-    // 2) Foreground fill rectangle, same corner radius
-    //    We’ll update its width in setValue().
     this.fillRect = new ex.Rectangle({
-      width: this.barWidth - 4, // starts full
-      height: this.barHeight - 4,
+      width: this.barWidth - border,
+      height: this.barHeight - border,
       color: ex.Color.fromHex('#96bdf8'),
+      strokeColor: ex.Color.Black,
+      lineWidth: 2,
       opacity: 1,
     });
 
-    // 3) Label text
+    // Label text
     const textGraphic = new ex.Text({
       text: 'Ice:',
       color: ex.Color.White,
@@ -43,10 +44,6 @@ export class IceMeter extends ex.ScreenElement {
       }),
     });
 
-    // 4) Group them:
-    //    - text at (0,0)
-    //    - backgroundRect at (50,0)
-    //    - fillRect also at (50,0), drawn above the background
     const group = new ex.GraphicsGroup({
       members: [
         {
@@ -54,12 +51,12 @@ export class IceMeter extends ex.ScreenElement {
           offset: ex.vec(0, 0),
         },
         {
-          graphic: backgroundRect,
-          offset: ex.vec(52, 0),
+          graphic: this.backgroundRect,
+          offset: ex.vec(52 + 3 - border / 2, 0 + 3 - border / 2),
         },
         {
           graphic: this.fillRect,
-          offset: ex.vec(52 + 2, 0 + 2),
+          offset: ex.vec(52 + 3, 0 + 3),
         },
       ],
     });
@@ -68,10 +65,20 @@ export class IceMeter extends ex.ScreenElement {
   }
 
   /** Set the current fraction of the bar between 0..1 */
-  public setValue(value: number) {
-    this.currentValue = ex.clamp(value, 0, 1);
+  public decrement(value: number) {
+    this.currentValue = ex.clamp(this.currentValue - value, 0, 1);
 
     // Update fill rectangle width
     this.fillRect.width = this.barWidth * this.currentValue;
+  }
+
+  public increment(value: number) {
+    this.currentValue = ex.clamp(this.currentValue + value, 0, 1);
+    // Update fill rectangle width
+    this.fillRect.width = this.barWidth * this.currentValue;
+  }
+
+  public value() {
+    return this.currentValue;
   }
 }

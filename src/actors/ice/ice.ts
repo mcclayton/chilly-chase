@@ -6,7 +6,7 @@ import * as ex from 'excalibur';
 export class Ice extends ex.Actor {
   private melting = false;
   private currentHeight = 12;
-  private iceBlockSprite: ex.Sprite;
+  private iceBlockSprite!: ex.Sprite;
 
   constructor(private player: Penguin) {
     super({

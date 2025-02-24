@@ -5,6 +5,10 @@ export const Config = {
     Width: 700,
     Height: 500,
   },
+  IceMeter: {
+    RefillAfterIdleSeconds: 3,
+    RefillRate: 0.2,
+  },
   Player: {
     StartPos: ex.vec(200, 300),
     Acceleration: 5,
@@ -16,6 +20,7 @@ export const Config = {
     Radius: 4,
     InitialSpeed: 600,
     Deceleration: 300,
+    SecondsUntilMelt: 2,
   },
   Enemy: {
     Acceleration: 5,

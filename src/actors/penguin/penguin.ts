@@ -11,6 +11,7 @@ export class Penguin extends ex.Actor {
   walkAnimation!: ex.Animation;
   startSprite!: ex.Sprite;
   private timeSinceLastIce = 0;
+  private timeSinceSpacePress = 0;
 
   constructor(private level: Level) {
     super({
@@ -36,18 +37,31 @@ export class Penguin extends ex.Actor {
   override onPostUpdate(engine: ex.Engine, delta: number): void {
     if (!this.playing) return;
 
-    // Accumulate time since last Ice creation
+    // Accumulate time since last ice creation
     const deltaSeconds = delta / 1000;
     this.timeSinceLastIce += deltaSeconds;
 
-    if (
-      engine.input.keyboard.isHeld(ex.Keys.Space) &&
-      this.timeSinceLastIce >= 0.05
-    ) {
-      const snowball = new Ice(this);
-      this.level.add(snowball);
-      // Reset ice timer
-      this.timeSinceLastIce = 0;
+    // Spacebar
+    if (engine.input.keyboard.isHeld(ex.Keys.Space)) {
+      this.timeSinceLastIce += deltaSeconds;
+      this.timeSinceSpacePress = 0; // reset refill idle timer
+
+      // If it's time to drop ice
+      if (this.timeSinceLastIce >= 0.05) {
+        this.dropIceBlock();
+      }
+    } else {
+      // If spacebar NOT held, accumulate idle time
+      this.timeSinceSpacePress += deltaSeconds;
+
+      // Once idle time passes 5s, start refilling the meter
+      if (this.timeSinceSpacePress > Config.IceMeter.RefillAfterIdleSeconds) {
+        const iceMeter = this.level.getIceMeter();
+        if (iceMeter.value() < 1) {
+          // Refill some portion each *frame*
+          iceMeter.increment(Config.IceMeter.RefillRate * deltaSeconds);
+        }
+      }
     }
 
     if (
@@ -134,6 +148,18 @@ export class Penguin extends ex.Actor {
     this.playing = false;
     this.vel = ex.vec(0, 0);
     this.acc = ex.vec(0, 0);
+  }
+
+  private dropIceBlock() {
+    const iceMeter = this.level.getIceMeter();
+
+    if (iceMeter.value() > 0) {
+      const iceBlock = new Ice(this);
+      this.level.add(iceBlock);
+      // Reset ice timer
+      this.timeSinceLastIce = 0;
+      iceMeter.decrement(0.01);
+    }
   }
 
   private decelerate() {

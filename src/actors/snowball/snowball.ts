@@ -33,7 +33,7 @@ export class Snowball extends ex.Actor {
 
     engine.clock.schedule(() => {
       this.melting = true;
-    }, 2000);
+    }, Config.Snowball.SecondsUntilMelt * 1000);
 
     this.on('exitviewport', () => {
       this.kill();
