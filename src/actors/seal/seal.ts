@@ -1,5 +1,6 @@
 import { Ice } from '../ice/ice';
 import { Penguin } from '../penguin/penguin';
+import { ScorePopup } from '../scorePopup/scorePopup';
 import { Snowball } from '../snowball/snowball';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
@@ -55,8 +56,17 @@ export class Seal extends ex.Actor {
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
     if (other.owner instanceof Snowball) {
-      // TODO: Animate death
-      this.level.scoreTracker.increment(10);
+      if (this.isFrozen()) {
+        const points = 25;
+        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 14);
+        this.level.add(popup);
+        this.level.scoreTracker.increment(points);
+      } else {
+        const points = 10;
+        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 10);
+        this.level.add(popup);
+        this.level.scoreTracker.increment(points);
+      }
       this.kill();
     }
 
