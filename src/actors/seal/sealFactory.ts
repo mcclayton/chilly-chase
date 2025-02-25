@@ -82,13 +82,15 @@ export class SealFactory {
         actor.kill();
       }
     }
+    this.timer.reset();
   }
 
   stop() {
     this.timer.stop();
     for (const actor of this.level.actors) {
       if (actor instanceof Seal) {
-        actor.vel = ex.vec(0, 0);
+        // Remove all the seals on stop
+        actor.kill();
       }
     }
   }

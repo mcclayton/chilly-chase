@@ -193,6 +193,7 @@ export class Penguin extends ex.Actor {
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
     if (other.owner instanceof Seal) {
+      this.graphics.use('fainted');
       this.level.triggerGameOver();
     }
   }
@@ -219,7 +220,12 @@ export class Penguin extends ex.Actor {
     );
     this.walkAnimation.flipHorizontal = true;
 
+    const faintedSprite = Resources.PenguinFaint.toSprite();
+    faintedSprite.width = 64;
+    faintedSprite.height = 64;
+
     // Register
+    this.graphics.add('fainted', faintedSprite);
     this.graphics.add('walk', this.walkAnimation);
     this.graphics.add('start', this.startSprite);
     this.graphics.use('start');

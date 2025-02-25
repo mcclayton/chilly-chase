@@ -15,12 +15,38 @@ export class Level extends ex.Scene {
   iceMeter!: IceMeter;
   scoreTracker!: ScoreTracker;
 
+  gameOverLabel = new ex.Label({
+    text: 'Game Over',
+    x: 350,
+    y: 200,
+    z: OVERLAY_Z,
+    font: new ex.Font({
+      family: 'Impact',
+      size: 30,
+      color: ex.Color.Red,
+      textAlign: ex.TextAlign.Center,
+    }),
+  });
+  gameOverSubLabel = new ex.Label({
+    text: 'Click to start a new game',
+    x: 348,
+    y: 250,
+    z: OVERLAY_Z,
+    font: new ex.Font({
+      family: 'Impact',
+      size: 15,
+      color: ex.Color.White,
+      textAlign: ex.TextAlign.Center,
+    }),
+  });
+
   startGameLabel = new ex.Label({
     text: 'Click to Start',
     x: 350,
     y: 200,
     z: OVERLAY_Z,
     font: new ex.Font({
+      family: 'Impact',
       size: 30,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
@@ -55,6 +81,10 @@ export class Level extends ex.Scene {
     this.add(this.scoreTracker);
     this.add(this.bestLabel);
     this.add(this.startGameLabel);
+    this.add(this.gameOverLabel);
+    this.add(this.gameOverSubLabel);
+    this.gameOverLabel.graphics.isVisible = false;
+    this.gameOverSubLabel.graphics.isVisible = false;
 
     const bestScore = localStorage.getItem('bestScore');
     if (bestScore) {
@@ -79,6 +109,18 @@ export class Level extends ex.Scene {
     });
   }
 
+  showGameOver() {
+    this.gameOverLabel.graphics.isVisible = true;
+    this.gameOverSubLabel.graphics.isVisible = true;
+    this.engine.input.pointers.once('down', () => {
+      this.reset();
+      this.gameOverLabel.graphics.isVisible = false;
+      this.gameOverSubLabel.graphics.isVisible = false;
+      this.sealFactory.start();
+      this.player.start();
+    });
+  }
+
   reset() {
     this.player.reset();
     this.sealFactory.reset();
@@ -89,7 +131,7 @@ export class Level extends ex.Scene {
   triggerGameOver() {
     this.sealFactory.stop();
     this.player.stop();
-    this.showStartInstructions();
+    this.showGameOver();
   }
 
   getIceMeter() {
