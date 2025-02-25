@@ -10,8 +10,8 @@ export class IceMeter extends ex.ScreenElement {
   private fillRect: ex.Rectangle;
   private backgroundRect: ex.Rectangle;
 
-  constructor(x: number, y: number) {
-    super({ x, y, z: 1 });
+  constructor(x: number, y: number, z: number) {
+    super({ x, y, z });
 
     this.barWidth = 200;
     this.barHeight = 20;
@@ -74,6 +74,12 @@ export class IceMeter extends ex.ScreenElement {
 
   public increment(value: number) {
     this.currentValue = ex.clamp(this.currentValue + value, 0, 1);
+    // Update fill rectangle width
+    this.fillRect.width = this.barWidth * this.currentValue;
+  }
+
+  public reset() {
+    this.currentValue = 1;
     // Update fill rectangle width
     this.fillRect.width = this.barWidth * this.currentValue;
   }

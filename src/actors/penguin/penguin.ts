@@ -1,6 +1,6 @@
 import { Ice } from '../ice/ice';
+import { Seal } from '../seal/seal';
 import { Snowball } from '../snowball/snowball';
-import { Pipe } from '@/actors/pipe/pipe';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
 import { Level } from '@/scenes/level';
@@ -17,7 +17,7 @@ export class Penguin extends ex.Actor {
     super({
       pos: Config.Player.StartPos,
       radius: 8,
-      color: ex.Color.Yellow,
+      z: 2,
     });
     this.level = level;
   }
@@ -42,7 +42,7 @@ export class Penguin extends ex.Actor {
     this.timeSinceLastIce += deltaSeconds;
 
     // Spacebar
-    if (engine.input.keyboard.isHeld(ex.Keys.Space)) {
+    if (engine.input.keyboard.isHeld(ex.Keys.Space) && this.hasIceInMeter()) {
       this.timeSinceLastIce += deltaSeconds;
       this.timeSinceSpacePress = 0; // reset refill idle timer
 
@@ -51,7 +51,7 @@ export class Penguin extends ex.Actor {
         this.dropIceBlock();
       }
     } else {
-      // If spacebar NOT held, accumulate idle time
+      // If spacebar NOT held or there is no ice in meter, accumulate idle time
       this.timeSinceSpacePress += deltaSeconds;
 
       // Once idle time passes 5s, start refilling the meter
@@ -141,6 +141,14 @@ export class Penguin extends ex.Actor {
 
   reset() {
     this.pos = Config.Player.StartPos; // starting position
+
+    // Remove all ice blocks that have been dropped
+    for (const actor of this.level.actors) {
+      if (actor instanceof Ice) {
+        actor.kill();
+      }
+    }
+
     this.stop();
   }
 
@@ -150,11 +158,16 @@ export class Penguin extends ex.Actor {
     this.acc = ex.vec(0, 0);
   }
 
+  private hasIceInMeter() {
+    const iceMeter = this.level.getIceMeter();
+    return iceMeter.value() > 0;
+  }
+
   private dropIceBlock() {
     const iceMeter = this.level.getIceMeter();
 
-    if (iceMeter.value() > 0) {
-      const iceBlock = new Ice(this);
+    if (this.hasIceInMeter()) {
+      const iceBlock = new Ice(this.level);
       this.level.add(iceBlock);
       // Reset ice timer
       this.timeSinceLastIce = 0;
@@ -179,7 +192,7 @@ export class Penguin extends ex.Actor {
   }
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
-    if (other.owner instanceof Pipe) {
+    if (other.owner instanceof Seal) {
       this.level.triggerGameOver();
     }
   }

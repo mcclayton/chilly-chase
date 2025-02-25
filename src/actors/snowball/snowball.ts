@@ -1,9 +1,6 @@
-import { Ice } from '../ice/ice';
 import { Penguin } from '../penguin/penguin';
-import { Pipe } from '@/actors/pipe/pipe';
+import { Seal } from '../seal/seal';
 import { Config } from '@/config';
-import { Resources } from '@/resources';
-import { Level } from '@/scenes/level';
 import * as ex from 'excalibur';
 
 export class Snowball extends ex.Actor {
@@ -15,6 +12,7 @@ export class Snowball extends ex.Actor {
       pos: player.pos.add(new ex.Vector(0, -5)),
       radius: Config.Snowball.Radius,
       color: ex.Color.White,
+      z: 3,
     });
     this.player = player;
     this.trajectory = trajectory;
@@ -56,7 +54,7 @@ export class Snowball extends ex.Actor {
   }
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
-    if (other.owner instanceof Ice) {
+    if (other.owner instanceof Seal) {
       this.stop();
     }
   }

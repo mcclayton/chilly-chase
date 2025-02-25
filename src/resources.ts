@@ -2,7 +2,9 @@ import * as ex from 'excalibur';
 
 export const Resources = {
   // Relative to /public in vite
-  PipeImage: new ex.ImageSource('./images/pipe.png'),
   PenguinWalk: new ex.ImageSource('./images/penguin_walk.png'),
+  Seal: new ex.ImageSource('./images/seal.png'),
+  FrozenSeal: new ex.ImageSource('./images/frozen_seal.png'),
   IceBlock: new ex.ImageSource('./images/ice.png'),
+  IceBackground: new ex.ImageSource('./images/ice_background.png'),
 } as const;

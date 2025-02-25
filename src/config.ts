@@ -22,11 +22,12 @@ export const Config = {
     Deceleration: 300,
     SecondsUntilMelt: 2,
   },
-  Enemy: {
-    Acceleration: 5,
-    Deceleration: 1,
+  Seal: {
+    Velocity: 60,
+    FreezeTimeSeconds: 3,
   },
-  PipeSpeed: 200,
-  PipeInterval: 1500,
-  PipeGap: 150,
+  SealFactory: {
+    MinCreationInterval: 500,
+    MaxCreationInterval: 4000,
+  },
 } as const;

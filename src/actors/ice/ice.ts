@@ -1,6 +1,6 @@
 import { Penguin } from '../penguin/penguin';
-import { Config } from '@/config';
 import { Resources } from '@/resources';
+import { Level } from '@/scenes/level';
 import * as ex from 'excalibur';
 
 export class Ice extends ex.Actor {
@@ -8,13 +8,13 @@ export class Ice extends ex.Actor {
   private currentHeight = 12;
   private iceBlockSprite!: ex.Sprite;
 
-  constructor(private player: Penguin) {
+  constructor(private level: Level) {
     super({
-      pos: player.pos,
+      pos: level.player.pos,
       width: 12,
       height: 12,
+      z: 1,
     });
-    this.player = player;
     this.currentHeight = 12;
   }
 

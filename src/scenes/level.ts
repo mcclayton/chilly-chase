@@ -1,23 +1,25 @@
 import { Penguin } from '../actors/penguin/penguin';
-import { Pipe } from '../actors/pipe/pipe';
-import { PipeFactory } from '../actors/pipe/pipe-factory';
-import { Config } from '../config';
+import { SealFactory } from '@/actors/seal/sealFactory';
 import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
+import { ScoreTracker } from '@/screenElements/scoreTracker/scoreTracker';
+import { TiledBackground } from '@/screenElements/tileBackground/tiledBackground';
 import * as ex from 'excalibur';
+
+const OVERLAY_Z = 100;
 
 export class Level extends ex.Scene {
   random = new ex.Random();
-  pipeFactory = new PipeFactory(this, this.random, Config.PipeInterval);
-  penguin = new Penguin(this);
-  score: number = 0;
+  sealFactory = new SealFactory(this, this.random);
+  player = new Penguin(this);
   best: number = 0;
   iceMeter!: IceMeter;
+  scoreTracker!: ScoreTracker;
 
   startGameLabel = new ex.Label({
     text: 'Click to Start',
-    x: 200,
+    x: 350,
     y: 200,
-    z: 3,
+    z: OVERLAY_Z,
     font: new ex.Font({
       size: 30,
       color: ex.Color.White,
@@ -25,22 +27,11 @@ export class Level extends ex.Scene {
     }),
   });
 
-  scoreLabel = new ex.Label({
-    text: 'Score: 0',
-    x: 0,
-    y: 0,
-    z: 1,
-    font: new ex.Font({
-      size: 20,
-      color: ex.Color.White,
-    }),
-  });
-
   bestLabel = new ex.Label({
     text: 'Best: 0',
-    x: 200,
+    x: 325,
     y: 0,
-    z: 1,
+    z: OVERLAY_Z,
     font: new ex.Font({
       size: 20,
       color: ex.Color.White,
@@ -49,16 +40,22 @@ export class Level extends ex.Scene {
   });
 
   override onInitialize(engine: ex.Engine): void {
-    this.add(this.penguin);
+    const background = new TiledBackground(engine);
+    this.add(background);
+
+    this.add(this.player);
     this.showStartInstructions();
 
-    const iceMeter = new IceMeter(300, 0);
+    this.scoreTracker = new ScoreTracker(25, 0, OVERLAY_Z);
+
+    const iceMeter = new IceMeter(425, 0, OVERLAY_Z);
     this.iceMeter = iceMeter;
     this.add(iceMeter);
 
-    this.add(this.scoreLabel);
+    this.add(this.scoreTracker);
     this.add(this.bestLabel);
     this.add(this.startGameLabel);
+
     const bestScore = localStorage.getItem('bestScore');
     if (bestScore) {
       this.best = +bestScore;
@@ -68,31 +65,31 @@ export class Level extends ex.Scene {
     }
   }
 
+  override onPostUpdate(engine: ex.Engine, delta: number): void {
+    this.sealFactory.update(delta);
+  }
+
   showStartInstructions() {
     this.startGameLabel.graphics.isVisible = true;
     this.engine.input.pointers.once('down', () => {
       this.reset();
       this.startGameLabel.graphics.isVisible = false;
-      this.penguin.start();
+      this.sealFactory.start();
+      this.player.start();
     });
   }
 
   reset() {
-    this.penguin.reset();
-    this.pipeFactory.reset();
-    this.score = 0;
-    this.scoreLabel.text = `Score: ${this.score}`;
+    this.player.reset();
+    this.sealFactory.reset();
+    this.iceMeter.reset();
+    this.scoreTracker.reset();
   }
 
   triggerGameOver() {
-    this.pipeFactory.stop();
-    this.penguin.stop();
+    this.sealFactory.stop();
+    this.player.stop();
     this.showStartInstructions();
-  }
-
-  incrementScore() {
-    this.scoreLabel.text = `Score: ${++this.score}`;
-    this.setBestScore(this.score);
   }
 
   getIceMeter() {
@@ -101,7 +98,7 @@ export class Level extends ex.Scene {
 
   setBestScore(score: number) {
     if (score > this.best) {
-      localStorage.setItem('bestScore', this.score.toString());
+      localStorage.setItem('bestScore', this.scoreTracker.score.toString());
       this.best = score;
     }
     this.bestLabel.text = `Best: ${this.best}`;
