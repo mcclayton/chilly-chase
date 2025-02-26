@@ -82,7 +82,7 @@ export class SealFactory {
         actor.kill();
       }
     }
-    this.timer.reset();
+    this.timer.reset(Config.SealFactory.MaxCreationInterval);
   }
 
   stop() {
