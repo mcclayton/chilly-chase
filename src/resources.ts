@@ -8,4 +8,5 @@ export const Resources = {
   FrozenSeal: new ex.ImageSource('./images/frozen_seal.png'),
   IceBlock: new ex.ImageSource('./images/ice.png'),
   IceBackground: new ex.ImageSource('./images/ice_background.png'),
+  Fishes: new ex.ImageSource('./images/fishes.png'),
 } as const;

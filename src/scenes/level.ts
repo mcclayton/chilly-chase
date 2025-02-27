@@ -1,4 +1,5 @@
 import { Penguin } from '../actors/penguin/penguin';
+import { FishFactory } from '@/actors/fish/fishFactory';
 import { SealFactory } from '@/actors/seal/sealFactory';
 import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
 import { ScoreTracker } from '@/screenElements/scoreTracker/scoreTracker';
@@ -10,6 +11,7 @@ const OVERLAY_Z = 100;
 export class Level extends ex.Scene {
   random = new ex.Random();
   sealFactory = new SealFactory(this, this.random);
+  fishFactory = new FishFactory(this, this.random);
   player = new Penguin(this);
   best: number = 0;
   iceMeter!: IceMeter;
@@ -105,6 +107,7 @@ export class Level extends ex.Scene {
       this.reset();
       this.startGameLabel.graphics.isVisible = false;
       this.sealFactory.start();
+      this.fishFactory.start();
       this.player.start();
     });
   }
@@ -117,6 +120,7 @@ export class Level extends ex.Scene {
       this.gameOverLabel.graphics.isVisible = false;
       this.gameOverSubLabel.graphics.isVisible = false;
       this.sealFactory.start();
+      this.fishFactory.start();
       this.player.start();
     });
   }
@@ -130,6 +134,7 @@ export class Level extends ex.Scene {
 
   triggerGameOver() {
     this.sealFactory.stop();
+    this.fishFactory.stop();
     this.player.stop();
     this.showGameOver();
   }

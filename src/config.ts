@@ -30,4 +30,10 @@ export const Config = {
     MinCreationInterval: 500,
     MaxCreationInterval: 4000,
   },
+  Fish: {
+    DurationSeconds: 5,
+  },
+  FishFactory: {
+    CreationInterval: 15000,
+  },
 } as const;
