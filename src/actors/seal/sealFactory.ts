@@ -66,9 +66,24 @@ export class SealFactory {
         break;
     }
 
+    // Compute seal velocity based on the current timer interval.
+    // The fraction (0 to 1) of how far we've progressed:
+    const fraction =
+      (Config.SealFactory.MaxCreationInterval - this.timer.interval) /
+      (Config.SealFactory.MaxCreationInterval -
+        Config.SealFactory.MinCreationInterval);
+
+    const sealVelocity =
+      Config.SealFactory.MinSealCreatedVelocity +
+      fraction *
+        (Config.SealFactory.MaxSealCreatedVelocity -
+          Config.SealFactory.MinSealCreatedVelocity);
+
+    console.log('SEAL_VELCITY: ', sealVelocity);
+
     // Create a single Seal at the random perimeter position
     const spawnPos = ex.vec(x, y);
-    const seal = new Seal(this.level, spawnPos, alignment);
+    const seal = new Seal(this.level, spawnPos, alignment, sealVelocity);
     this.level.add(seal);
   }
 

@@ -115,6 +115,12 @@ export class Level extends ex.Scene {
   showGameOver() {
     this.gameOverLabel.graphics.isVisible = true;
     this.gameOverSubLabel.graphics.isVisible = true;
+
+    // Update best score on game over
+    if (this.best < this.scoreTracker.score) {
+      this.setBestScore(this.scoreTracker.score);
+    }
+
     this.engine.input.pointers.once('down', () => {
       this.reset();
       this.gameOverLabel.graphics.isVisible = false;
@@ -148,6 +154,6 @@ export class Level extends ex.Scene {
       localStorage.setItem('bestScore', this.scoreTracker.score.toString());
       this.best = score;
     }
-    this.bestLabel.text = `Best: ${this.best}`;
+    this.bestLabel.text = `Best: ${this.best.toLocaleString('en-US')}`;
   }
 }

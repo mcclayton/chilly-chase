@@ -29,6 +29,8 @@ export const Config = {
   SealFactory: {
     MinCreationInterval: 500,
     MaxCreationInterval: 4000,
+    MinSealCreatedVelocity: 35,
+    MaxSealCreatedVelocity: 100,
   },
   Fish: {
     DurationSeconds: 5,

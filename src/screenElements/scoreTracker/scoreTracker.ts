@@ -31,7 +31,7 @@ export class ScoreTracker extends ex.ScreenElement {
   }
 
   public refresh() {
-    this.scoreLabel.text = `Score: ${this.score}`;
+    this.scoreLabel.text = `Score: ${this.score.toLocaleString('en-US')}`;
   }
 
   public reset() {

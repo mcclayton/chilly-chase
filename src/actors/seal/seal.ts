@@ -16,6 +16,7 @@ export class Seal extends ex.Actor {
     private level: Level,
     pos: ex.Vector,
     public alignment: Alignment,
+    public speed: number = Config.Seal.Velocity,
   ) {
     super({
       pos,
@@ -46,7 +47,7 @@ export class Seal extends ex.Actor {
     const direction = this.level.player.pos.sub(this.pos);
     if (direction.magnitude > 0.0001) {
       // Move toward the player
-      this.vel = direction.normalize().scale(Config.Seal.Velocity);
+      this.vel = direction.normalize().scale(this.speed);
       this.updateWalkAnimation();
     } else {
       // If seal is basically on top of the player
