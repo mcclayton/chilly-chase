@@ -32,6 +32,12 @@ export const Config = {
     MinSealCreatedVelocity: 35,
     MaxSealCreatedVelocity: 100,
   },
+  EskimoFactory: {
+    MinCreationInterval: 500,
+    MaxCreationInterval: 20000,
+    MinEskimoCreatedVelocity: 35,
+    MaxEskimoCreatedVelocity: 70,
+  },
   Fish: {
     DurationSeconds: 5,
   },

@@ -1,15 +1,15 @@
-import { Alignment, Seal } from './seal';
+import { Alignment, Eskimo } from './eskimo';
 import { Config } from '@/config';
 import { Level } from '@/scenes/level';
 import * as ex from 'excalibur';
 
-export class SealFactory {
+export class EskimoFactory {
   private timer: ex.Timer;
   private totalElapsed = 0;
 
   constructor(private level: Level, private random: ex.Random) {
     this.timer = new ex.Timer({
-      interval: Config.SealFactory.MaxCreationInterval,
+      interval: Config.EskimoFactory.MaxCreationInterval,
       repeats: true,
       action: () => this.spawnSeals(),
     });
@@ -23,8 +23,8 @@ export class SealFactory {
     const rampDurationMs = 300000;
     const fraction = Math.min(this.totalElapsed / rampDurationMs, 1);
 
-    const maxInterval = Config.SealFactory.MaxCreationInterval;
-    const minInterval = Config.SealFactory.MinCreationInterval;
+    const maxInterval = Config.EskimoFactory.MaxCreationInterval;
+    const minInterval = Config.EskimoFactory.MinCreationInterval;
 
     // Linear interpolation from maxInterval to minInterval
     const newInterval = maxInterval - fraction * (maxInterval - minInterval);
@@ -66,23 +66,23 @@ export class SealFactory {
         break;
     }
 
-    // Compute seal velocity based on the current timer interval.
+    // Compute eskimo velocity based on the current timer interval.
     // The fraction (0 to 1) of how far we've progressed:
     const fraction =
-      (Config.SealFactory.MaxCreationInterval - this.timer.interval) /
-      (Config.SealFactory.MaxCreationInterval -
-        Config.SealFactory.MinCreationInterval);
+      (Config.EskimoFactory.MaxCreationInterval - this.timer.interval) /
+      (Config.EskimoFactory.MaxCreationInterval -
+        Config.EskimoFactory.MinCreationInterval);
 
     const sealVelocity =
-      Config.SealFactory.MinSealCreatedVelocity +
+      Config.EskimoFactory.MinEskimoCreatedVelocity +
       fraction *
-        (Config.SealFactory.MaxSealCreatedVelocity -
-          Config.SealFactory.MinSealCreatedVelocity);
+        (Config.EskimoFactory.MaxEskimoCreatedVelocity -
+          Config.EskimoFactory.MinEskimoCreatedVelocity);
 
-    // Create a single Seal at the random perimeter position
+    // Create a single Eskimo at the random perimeter position
     const spawnPos = ex.vec(x, y);
-    const seal = new Seal(this.level, spawnPos, alignment, sealVelocity);
-    this.level.add(seal);
+    const eskimo = new Eskimo(this.level, spawnPos, alignment, sealVelocity);
+    this.level.add(eskimo);
   }
 
   start() {
@@ -91,18 +91,18 @@ export class SealFactory {
 
   reset() {
     for (const actor of this.level.actors) {
-      if (actor instanceof Seal) {
+      if (actor instanceof Eskimo) {
         actor.kill();
       }
     }
-    this.timer.reset(Config.SealFactory.MaxCreationInterval);
+    this.timer.reset(Config.EskimoFactory.MaxCreationInterval);
   }
 
   stop() {
     this.timer.stop();
     for (const actor of this.level.actors) {
-      if (actor instanceof Seal) {
-        // Remove all the seals on stop
+      if (actor instanceof Eskimo) {
+        // Remove all the eskimos on stop
         actor.kill();
       }
     }

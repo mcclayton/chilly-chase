@@ -1,4 +1,5 @@
 import { Penguin } from '../actors/penguin/penguin';
+import { EskimoFactory } from '@/actors/eskimo/eskimoFactory';
 import { FishFactory } from '@/actors/fish/fishFactory';
 import { SealFactory } from '@/actors/seal/sealFactory';
 import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
@@ -11,6 +12,7 @@ const OVERLAY_Z = 100;
 export class Level extends ex.Scene {
   random = new ex.Random();
   sealFactory = new SealFactory(this, this.random);
+  eskimoFactory = new EskimoFactory(this, this.random);
   fishFactory = new FishFactory(this, this.random);
   player = new Penguin(this);
   best: number = 0;
@@ -99,6 +101,7 @@ export class Level extends ex.Scene {
 
   override onPostUpdate(engine: ex.Engine, delta: number): void {
     this.sealFactory.update(delta);
+    this.eskimoFactory.update(delta);
   }
 
   showStartInstructions() {
@@ -107,6 +110,7 @@ export class Level extends ex.Scene {
       this.reset();
       this.startGameLabel.graphics.isVisible = false;
       this.sealFactory.start();
+      this.eskimoFactory.start();
       this.fishFactory.start();
       this.player.start();
     });
@@ -126,6 +130,7 @@ export class Level extends ex.Scene {
       this.gameOverLabel.graphics.isVisible = false;
       this.gameOverSubLabel.graphics.isVisible = false;
       this.sealFactory.start();
+      this.eskimoFactory.start();
       this.fishFactory.start();
       this.player.start();
     });
@@ -134,12 +139,14 @@ export class Level extends ex.Scene {
   reset() {
     this.player.reset();
     this.sealFactory.reset();
+    this.eskimoFactory.reset();
     this.iceMeter.reset();
     this.scoreTracker.reset();
   }
 
   triggerGameOver() {
     this.sealFactory.stop();
+    this.eskimoFactory.stop();
     this.fishFactory.stop();
     this.player.stop();
     this.showGameOver();
