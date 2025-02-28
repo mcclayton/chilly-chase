@@ -52,11 +52,11 @@ export class IceMeter extends ex.ScreenElement {
         },
         {
           graphic: this.backgroundRect,
-          offset: ex.vec(52 + 3 - border / 2, 0 + 3 - border / 2),
+          offset: ex.vec(42 + 3 - border / 2, 0 + 3 - border / 2),
         },
         {
           graphic: this.fillRect,
-          offset: ex.vec(52 + 3, 0 + 3),
+          offset: ex.vec(42 + 3, 0 + 3),
         },
       ],
     });

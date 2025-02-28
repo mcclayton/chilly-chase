@@ -39,7 +39,7 @@ export const Config = {
     MaxEskimoCreatedVelocity: 70,
   },
   Fish: {
-    DurationSeconds: 5,
+    DurationSeconds: 7,
   },
   FishFactory: {
     CreationInterval: 15000,

@@ -59,12 +59,12 @@ export class Seal extends ex.Actor {
     if (other.owner instanceof Snowball) {
       if (this.isFrozen()) {
         const points = 25;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 14);
+        const popup = new ScorePopup(this.pos.clone(), points);
         this.level.add(popup);
         this.level.scoreTracker.increment(points);
       } else {
         const points = 10;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 10);
+        const popup = new ScorePopup(this.pos.clone(), points);
         this.level.add(popup);
         this.level.scoreTracker.increment(points);
       }

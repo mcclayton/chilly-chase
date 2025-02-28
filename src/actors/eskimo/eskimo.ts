@@ -39,7 +39,7 @@ export class Eskimo extends ex.Actor {
 
     this.timeSinceLastEskimoSnowball += dt;
 
-    if (this.timeSinceLastEskimoSnowball > 3) {
+    if (this.timeSinceLastEskimoSnowball > 3 && !this.isFrozen()) {
       const snowball = new EskimoSnowball(this.pos.clone(), this.level.player);
       this.level.add(snowball);
       this.timeSinceLastEskimoSnowball = 0;
@@ -67,17 +67,12 @@ export class Eskimo extends ex.Actor {
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
     if (other.owner instanceof Snowball) {
       if (this.isFrozen()) {
-        const points = 25;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 14);
+        const points = 40;
+        const popup = new ScorePopup(this.pos.clone(), points);
         this.level.add(popup);
         this.level.scoreTracker.increment(points);
-      } else {
-        const points = 10;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 10);
-        this.level.add(popup);
-        this.level.scoreTracker.increment(points);
+        this.kill();
       }
-      this.kill();
     }
 
     if (other.owner instanceof Ice) {
@@ -113,11 +108,9 @@ export class Eskimo extends ex.Actor {
     // Since we freeze on bounce off of an ice block
     // we invert the logic here
     if (!this.isMovingUp()) {
-      // TODO: Fix
-      // this.graphics.use('frozen-upwards');
+      this.graphics.use('frozen-upwards');
     } else {
-      // TODO: Fix
-      // this.graphics.use('frozen-downwards');
+      this.graphics.use('frozen-downwards');
     }
   }
 
@@ -162,9 +155,21 @@ export class Eskimo extends ex.Actor {
       ex.AnimationStrategy.Loop,
     );
 
+    const frozenDownwards = Resources.EskimoFrozenDownwards.toSprite({
+      height: 17,
+      width: 17,
+    });
+
+    const frozenUpwards = Resources.EskimoFrozenUpwards.toSprite({
+      height: 17,
+      width: 17,
+    });
+
     // Register animations/frames
     this.graphics.add('walk-downwards', walkDownwardsAnimation);
     this.graphics.add('walk-upwards', walkUpwardsAnimation);
+    this.graphics.add('frozen-downwards', frozenDownwards);
+    this.graphics.add('frozen-upwards', frozenUpwards);
 
     // Default animation when actor spawns
     this.graphics.use('walk-downwards');

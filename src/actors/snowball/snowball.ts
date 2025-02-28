@@ -1,3 +1,4 @@
+import { Eskimo } from '../eskimo/eskimo';
 import { Penguin } from '../penguin/penguin';
 import { Seal } from '../seal/seal';
 import { Config } from '@/config';
@@ -54,7 +55,7 @@ export class Snowball extends ex.Actor {
   }
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
-    if (other.owner instanceof Seal) {
+    if (other.owner instanceof Seal || other.owner instanceof Eskimo) {
       this.stop();
     }
   }

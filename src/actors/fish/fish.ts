@@ -50,18 +50,18 @@ export class Fish extends ex.Actor {
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
     if (other.owner instanceof Penguin) {
       if (this.pointsLevel === 'max') {
-        const points = 60;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 16);
+        const points = 30;
+        const popup = new ScorePopup(this.pos.clone(), points);
         this.level.add(popup);
         this.level.scoreTracker.increment(points);
       } else if (this.pointsLevel === 'middle') {
-        const points = 30;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 14);
+        const points = 20;
+        const popup = new ScorePopup(this.pos.clone(), points);
         this.level.add(popup);
         this.level.scoreTracker.increment(points);
       } else {
-        const points = 15;
-        const popup = new ScorePopup(this.pos.clone(), `+${points}`, 10);
+        const points = 10;
+        const popup = new ScorePopup(this.pos.clone(), points);
         this.level.add(popup);
         this.level.scoreTracker.increment(points);
       }
