@@ -1,3 +1,5 @@
+import { Eskimo } from '../eskimo/eskimo';
+import { EskimoSnowball } from '../eskimo/eskimoSnowball';
 import { Ice } from '../ice/ice';
 import { Seal } from '../seal/seal';
 import { Snowball } from '../snowball/snowball';
@@ -192,7 +194,15 @@ export class Penguin extends ex.Actor {
   }
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
-    if (other.owner instanceof Seal) {
+    if (
+      other.owner instanceof EskimoSnowball &&
+      other.owner.vel === ex.Vector.Zero
+    ) {
+      this.graphics.use('fainted');
+      this.level.triggerGameOver();
+    }
+
+    if (other.owner instanceof Seal || other.owner instanceof Eskimo) {
       this.graphics.use('fainted');
       this.level.triggerGameOver();
     }

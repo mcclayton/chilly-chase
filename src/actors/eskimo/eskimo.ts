@@ -1,8 +1,7 @@
 import { Ice } from '../ice/ice';
-import { Penguin } from '../penguin/penguin';
 import { ScorePopup } from '../scorePopup/scorePopup';
 import { Snowball } from '../snowball/snowball';
-import { Spear } from '../spear/spear';
+import { EskimoSnowball } from './eskimoSnowball';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
 import { Level } from '@/scenes/level';
@@ -12,7 +11,7 @@ export type Alignment = 'top' | 'bottom' | 'left' | 'right';
 
 export class Eskimo extends ex.Actor {
   private freezeTime = 0; // Number of seconds remaining to unfreeze
-  private timeSinceLastSpear = 0;
+  private timeSinceLastEskimoSnowball = 0;
 
   constructor(
     private level: Level,
@@ -38,12 +37,12 @@ export class Eskimo extends ex.Actor {
   override onPostUpdate(engine: ex.Engine, delta: number): void {
     const dt = delta / 1000;
 
-    this.timeSinceLastSpear += dt;
+    this.timeSinceLastEskimoSnowball += dt;
 
-    if (this.timeSinceLastSpear > 3) {
-      const spear = new Spear(this.pos.clone(), this.level.player);
-      this.level.add(spear);
-      this.timeSinceLastSpear = 0;
+    if (this.timeSinceLastEskimoSnowball > 3) {
+      const snowball = new EskimoSnowball(this.pos.clone(), this.level.player);
+      this.level.add(snowball);
+      this.timeSinceLastEskimoSnowball = 0;
     }
 
     if (this.isFrozen()) {
@@ -104,8 +103,7 @@ export class Eskimo extends ex.Actor {
   private updateWalkAnimation(): void {
     // Decide walk-up vs. walk-down
     if (this.isMovingUp()) {
-      // TODO: Fix
-      // this.graphics.use('walk-upwards');
+      this.graphics.use('walk-upwards');
     } else {
       this.graphics.use('walk-downwards');
     }
@@ -131,20 +129,34 @@ export class Eskimo extends ex.Actor {
   }
 
   private initSprites() {
-    const spriteSheet = ex.SpriteSheet.fromImageSource({
-      image: Resources.Eskimo,
+    const downardsSpriteSheet = ex.SpriteSheet.fromImageSource({
+      image: Resources.EskimoDownwards,
       grid: {
         rows: 2,
         columns: 2,
-        spriteWidth: 16,
-        spriteHeight: 16,
+        spriteWidth: 17,
+        spriteHeight: 17,
       },
     });
 
-    const defaultSprite = spriteSheet.getSprite(0, 0);
+    const upwardsSpriteSheet = ex.SpriteSheet.fromImageSource({
+      image: Resources.EskimoUpwards,
+      grid: {
+        rows: 2,
+        columns: 2,
+        spriteWidth: 17,
+        spriteHeight: 17,
+      },
+    });
 
     const walkDownwardsAnimation = ex.Animation.fromSpriteSheet(
-      spriteSheet,
+      downardsSpriteSheet,
+      [0, 1, 2, 3],
+      150,
+      ex.AnimationStrategy.Loop,
+    );
+    const walkUpwardsAnimation = ex.Animation.fromSpriteSheet(
+      upwardsSpriteSheet,
       [0, 1, 2, 3],
       150,
       ex.AnimationStrategy.Loop,
@@ -152,6 +164,7 @@ export class Eskimo extends ex.Actor {
 
     // Register animations/frames
     this.graphics.add('walk-downwards', walkDownwardsAnimation);
+    this.graphics.add('walk-upwards', walkUpwardsAnimation);
 
     // Default animation when actor spawns
     this.graphics.use('walk-downwards');

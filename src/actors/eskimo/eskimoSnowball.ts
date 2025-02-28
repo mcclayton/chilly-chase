@@ -1,9 +1,9 @@
+import { Ice } from '../ice/ice';
 import { Penguin } from '../penguin/penguin';
-import { Seal } from '../seal/seal';
 import { Config } from '@/config';
 import * as ex from 'excalibur';
 
-export class Spear extends ex.Actor {
+export class EskimoSnowball extends ex.Actor {
   private melting = false;
   private currentRadius;
   private trajectory: ex.Vector;
@@ -56,14 +56,14 @@ export class Spear extends ex.Actor {
   }
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
-    if (other.owner instanceof Penguin) {
+    if (other.owner instanceof Penguin || other.owner instanceof Ice) {
       this.stop();
     }
   }
 
   stop() {
-    this.vel = ex.vec(0, 0);
-    this.acc = ex.vec(0, 0);
+    this.vel = ex.Vector.Zero;
+    this.acc = ex.Vector.Zero;
     this.melting = true;
   }
 
