@@ -2,6 +2,7 @@ import { Penguin } from '../actors/penguin/penguin';
 import { EskimoFactory } from '@/actors/eskimo/eskimoFactory';
 import { FishFactory } from '@/actors/fish/fishFactory';
 import { SealFactory } from '@/actors/seal/sealFactory';
+import { Config } from '@/config';
 import { Resources } from '@/resources';
 import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
 import { ScoreTracker } from '@/screenElements/scoreTracker/scoreTracker';
@@ -95,20 +96,36 @@ export class Game extends ex.Scene {
   }
 
   override onActivate(): void {
-    Resources.FasterBackgroundMusic.loop = true;
-    Resources.FasterBackgroundMusic.play(0.6);
+    Resources.BackgroundMusic.loop = true;
+    Resources.BackgroundMusic.playbackRate =
+      Config.BackgroundMusic.InitialPlaybackSpeed;
+    Resources.BackgroundMusic.play(Config.BackgroundMusic.DefaultVolume);
   }
 
   override onDeactivate(): void {
-    Resources.FasterBackgroundMusic.stop();
+    Resources.BackgroundMusic.stop();
   }
 
   override onPostUpdate(engine: ex.Engine, delta: number): void {
     this.sealFactory.update(delta);
     this.eskimoFactory.update(delta);
+
+    // Gradually increase playback rate
+    const totalTime = 100000;
+    const rateIncrement = 0.4 / totalTime;
+    if (Resources.BackgroundMusic.playbackRate < 1) {
+      Resources.BackgroundMusic.playbackRate = Math.min(
+        1,
+        Resources.BackgroundMusic.playbackRate + rateIncrement * delta,
+      );
+    }
   }
 
   showGameOver() {
+    Resources.BackgroundMusic.volume = Config.BackgroundMusic.GameOverVolume;
+    Resources.BackgroundMusic.playbackRate =
+      Config.BackgroundMusic.InitialPlaybackSpeed;
+
     this.gameOverLabel.graphics.isVisible = true;
     this.gameOverSubLabel.graphics.isVisible = true;
 
@@ -129,6 +146,9 @@ export class Game extends ex.Scene {
   }
 
   reset() {
+    Resources.BackgroundMusic.volume = Config.BackgroundMusic.DefaultVolume;
+    Resources.BackgroundMusic.playbackRate =
+      Config.BackgroundMusic.InitialPlaybackSpeed;
     this.player.reset();
     this.sealFactory.reset();
     this.eskimoFactory.reset();

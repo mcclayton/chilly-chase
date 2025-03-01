@@ -50,4 +50,9 @@ export const Config = {
   FishFactory: {
     CreationInterval: 15000,
   },
+  BackgroundMusic: {
+    DefaultVolume: 0.6,
+    InitialPlaybackSpeed: 0.6,
+    GameOverVolume: 0.3,
+  },
 } as const;

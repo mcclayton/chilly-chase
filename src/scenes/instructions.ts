@@ -55,13 +55,4 @@ export class Instructions extends ex.Scene {
       engine.goToScene('Game');
     });
   }
-
-  override onActivate(): void {
-    Resources.SlowerBackgroundMusic.loop = true;
-    Resources.SlowerBackgroundMusic.play(0.6);
-  }
-
-  override onDeactivate(context: ex.SceneActivationContext): void {
-    Resources.SlowerBackgroundMusic.stop();
-  }
 }
