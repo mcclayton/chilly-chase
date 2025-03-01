@@ -1,6 +1,7 @@
 import { Config } from './config';
 import { Resources } from './resources';
-import { Level } from './scenes/level';
+import { Game } from './scenes/game';
+import { Instructions } from './scenes/instructions';
 import * as ex from 'excalibur';
 
 const game = new ex.Engine({
@@ -10,10 +11,13 @@ const game = new ex.Engine({
   pixelArt: true,
   pixelRatio: 2,
   displayMode: ex.DisplayMode.FitScreen,
-  scenes: { Level: Level },
+  scenes: { Game, Instructions },
 });
 
-const loader = new ex.Loader(Object.values(Resources));
+const loader = new ex.DefaultLoader({
+  loadables: Object.values(Resources),
+});
+
 game.start(loader).then(() => {
-  game.goToScene('Level');
+  game.goToScene('Instructions');
 });

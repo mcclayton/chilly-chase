@@ -1,19 +1,19 @@
 import { Alignment, Eskimo } from './eskimo';
 import { Config } from '@/config';
-import { Level } from '@/scenes/level';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class EskimoFactory {
   private timer: ex.Timer;
   private totalElapsed = 0;
 
-  constructor(private level: Level, private random: ex.Random) {
+  constructor(private game: Game, private random: ex.Random) {
     this.timer = new ex.Timer({
       interval: Config.EskimoFactory.MaxCreationInterval,
       repeats: true,
       action: () => this.spawnSeals(),
     });
-    this.level.add(this.timer);
+    this.game.add(this.timer);
   }
 
   public update(delta: number) {
@@ -34,8 +34,8 @@ export class EskimoFactory {
   }
 
   spawnSeals() {
-    const drawWidth = this.level.engine.screen.drawWidth; // screen width
-    const drawHeight = this.level.engine.screen.drawHeight; // screen height
+    const drawWidth = this.game.engine.screen.drawWidth; // screen width
+    const drawHeight = this.game.engine.screen.drawHeight; // screen height
 
     const side = this.random.integer(0, 3);
 
@@ -81,8 +81,8 @@ export class EskimoFactory {
 
     // Create a single Eskimo at the random perimeter position
     const spawnPos = ex.vec(x, y);
-    const eskimo = new Eskimo(this.level, spawnPos, alignment, sealVelocity);
-    this.level.add(eskimo);
+    const eskimo = new Eskimo(this.game, spawnPos, alignment, sealVelocity);
+    this.game.add(eskimo);
   }
 
   start() {
@@ -90,17 +90,18 @@ export class EskimoFactory {
   }
 
   reset() {
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Eskimo) {
         actor.kill();
       }
     }
+    this.totalElapsed = 0;
     this.timer.reset(Config.EskimoFactory.MaxCreationInterval);
   }
 
   stop() {
     this.timer.stop();
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Eskimo) {
         // Remove all the eskimos on stop
         actor.kill();

@@ -4,7 +4,7 @@ import { ScorePopup } from '../scorePopup/scorePopup';
 import { Snowball } from '../snowball/snowball';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
-import { Level } from '@/scenes/level';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export type Alignment = 'top' | 'bottom' | 'left' | 'right';
@@ -13,7 +13,7 @@ export class Seal extends ex.Actor {
   private freezeTime = 0; // Number of seconds remaining to unfreeze
 
   constructor(
-    private level: Level,
+    private game: Game,
     pos: ex.Vector,
     public alignment: Alignment,
     public speed: number = Config.Seal.Velocity,
@@ -44,7 +44,7 @@ export class Seal extends ex.Actor {
     }
 
     // Otherwise, chase the player
-    const direction = this.level.player.pos.sub(this.pos);
+    const direction = this.game.player.pos.sub(this.pos);
     if (direction.magnitude > 0.0001) {
       // Move toward the player
       this.vel = direction.normalize().scale(this.speed);
@@ -60,13 +60,13 @@ export class Seal extends ex.Actor {
       if (this.isFrozen()) {
         const points = 25;
         const popup = new ScorePopup(this.pos.clone(), points);
-        this.level.add(popup);
-        this.level.scoreTracker.increment(points);
+        this.game.add(popup);
+        this.game.scoreTracker.increment(points);
       } else {
         const points = 10;
         const popup = new ScorePopup(this.pos.clone(), points);
-        this.level.add(popup);
-        this.level.scoreTracker.increment(points);
+        this.game.add(popup);
+        this.game.scoreTracker.increment(points);
       }
       this.kill();
     }

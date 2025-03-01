@@ -1,23 +1,23 @@
 import { Fish } from './fish';
 import { Config } from '@/config';
-import { Level } from '@/scenes/level';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class FishFactory {
   private timer: ex.Timer;
 
-  constructor(private level: Level, private random: ex.Random) {
+  constructor(private game: Game, private random: ex.Random) {
     this.timer = new ex.Timer({
       interval: Config.FishFactory.CreationInterval,
       repeats: true,
       action: () => this.spawnFish(),
     });
-    this.level.add(this.timer);
+    this.game.add(this.timer);
   }
 
   spawnFish() {
-    const drawWidth = this.level.engine.screen.drawWidth; // screen width
-    const drawHeight = this.level.engine.screen.drawHeight; // screen height
+    const drawWidth = this.game.engine.screen.drawWidth; // screen width
+    const drawHeight = this.game.engine.screen.drawHeight; // screen height
     // Ensure we don't create fish too close to the edges of the screen
     const borderBuffer = 80;
 
@@ -27,8 +27,8 @@ export class FishFactory {
     // Create a single Fish at the random position
     // TODO: space away from player
     const spawnPos = ex.vec(x + borderBuffer / 2, y + borderBuffer / 2);
-    const fish = new Fish(this.level, spawnPos);
-    this.level.add(fish);
+    const fish = new Fish(this.game, spawnPos);
+    this.game.add(fish);
   }
 
   start() {
@@ -36,17 +36,17 @@ export class FishFactory {
   }
 
   reset() {
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Fish) {
         actor.kill();
       }
     }
-    this.timer.reset(Config.SealFactory.MaxCreationInterval);
+    this.timer.reset(Config.FishFactory.CreationInterval);
   }
 
   stop() {
     this.timer.stop();
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Fish) {
         // Remove all the fish on stop
         actor.kill();

@@ -2,6 +2,7 @@ import { Eskimo } from '../eskimo/eskimo';
 import { Penguin } from '../penguin/penguin';
 import { Seal } from '../seal/seal';
 import { Config } from '@/config';
+import { Resources } from '@/resources';
 import * as ex from 'excalibur';
 
 export class Snowball extends ex.Actor {

@@ -1,19 +1,19 @@
 import { Alignment, Seal } from './seal';
 import { Config } from '@/config';
-import { Level } from '@/scenes/level';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class SealFactory {
   private timer: ex.Timer;
   private totalElapsed = 0;
 
-  constructor(private level: Level, private random: ex.Random) {
+  constructor(private game: Game, private random: ex.Random) {
     this.timer = new ex.Timer({
       interval: Config.SealFactory.MaxCreationInterval,
       repeats: true,
       action: () => this.spawnSeals(),
     });
-    this.level.add(this.timer);
+    this.game.add(this.timer);
   }
 
   public update(delta: number) {
@@ -34,8 +34,8 @@ export class SealFactory {
   }
 
   spawnSeals() {
-    const drawWidth = this.level.engine.screen.drawWidth; // screen width
-    const drawHeight = this.level.engine.screen.drawHeight; // screen height
+    const drawWidth = this.game.engine.screen.drawWidth; // screen width
+    const drawHeight = this.game.engine.screen.drawHeight; // screen height
 
     const side = this.random.integer(0, 3);
 
@@ -81,8 +81,8 @@ export class SealFactory {
 
     // Create a single Seal at the random perimeter position
     const spawnPos = ex.vec(x, y);
-    const seal = new Seal(this.level, spawnPos, alignment, sealVelocity);
-    this.level.add(seal);
+    const seal = new Seal(this.game, spawnPos, alignment, sealVelocity);
+    this.game.add(seal);
   }
 
   start() {
@@ -90,17 +90,18 @@ export class SealFactory {
   }
 
   reset() {
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Seal) {
         actor.kill();
       }
     }
+    this.totalElapsed = 0;
     this.timer.reset(Config.SealFactory.MaxCreationInterval);
   }
 
   stop() {
     this.timer.stop();
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Seal) {
         // Remove all the seals on stop
         actor.kill();

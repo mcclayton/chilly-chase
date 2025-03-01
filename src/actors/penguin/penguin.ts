@@ -5,7 +5,7 @@ import { Seal } from '../seal/seal';
 import { Snowball } from '../snowball/snowball';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
-import { Level } from '@/scenes/level';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class Penguin extends ex.Actor {
@@ -15,24 +15,25 @@ export class Penguin extends ex.Actor {
   private timeSinceLastIce = 0;
   private timeSinceSpacePress = 0;
 
-  constructor(private level: Level) {
+  constructor(private game: Game) {
     super({
       pos: Config.Player.StartPos,
       radius: 8,
       z: 2,
     });
-    this.level = level;
+    this.game = game;
   }
 
   override onInitialize(engine: ex.Engine): void {
     engine.input.pointers.primary.on('down', (evt) => {
+      Resources.SnowballThrow.play(1);
       const snowball = new Snowball(this, evt.worldPos.sub(this.pos));
-      this.level.add(snowball);
+      this.game.add(snowball);
     });
 
     this.initSprites();
     this.on('exitviewport', () => {
-      this.level.triggerGameOver();
+      this.game.triggerGameOver();
     });
   }
 
@@ -58,7 +59,7 @@ export class Penguin extends ex.Actor {
 
       // Once idle time passes 5s, start refilling the meter
       if (this.timeSinceSpacePress > Config.IceMeter.RefillAfterIdleSeconds) {
-        const iceMeter = this.level.getIceMeter();
+        const iceMeter = this.game.getIceMeter();
         if (iceMeter.value() < 1) {
           // Refill some portion each *frame*
           iceMeter.increment(Config.IceMeter.RefillRate * deltaSeconds);
@@ -145,7 +146,7 @@ export class Penguin extends ex.Actor {
     this.pos = Config.Player.StartPos; // starting position
 
     // Remove all ice blocks that have been dropped
-    for (const actor of this.level.actors) {
+    for (const actor of this.game.actors) {
       if (actor instanceof Ice) {
         actor.kill();
       }
@@ -161,16 +162,16 @@ export class Penguin extends ex.Actor {
   }
 
   private hasIceInMeter() {
-    const iceMeter = this.level.getIceMeter();
+    const iceMeter = this.game.getIceMeter();
     return iceMeter.value() > 0;
   }
 
   private dropIceBlock() {
-    const iceMeter = this.level.getIceMeter();
+    const iceMeter = this.game.getIceMeter();
 
     if (this.hasIceInMeter()) {
-      const iceBlock = new Ice(this.level);
-      this.level.add(iceBlock);
+      const iceBlock = new Ice(this.game);
+      this.game.add(iceBlock);
       // Reset ice timer
       this.timeSinceLastIce = 0;
       iceMeter.decrement(0.01);
@@ -196,15 +197,15 @@ export class Penguin extends ex.Actor {
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
     if (
       other.owner instanceof EskimoSnowball &&
-      other.owner.vel === ex.Vector.Zero
+      other.owner.vel !== ex.Vector.Zero
     ) {
       this.graphics.use('fainted');
-      this.level.triggerGameOver();
+      this.game.triggerGameOver();
     }
 
     if (other.owner instanceof Seal || other.owner instanceof Eskimo) {
       this.graphics.use('fainted');
-      this.level.triggerGameOver();
+      this.game.triggerGameOver();
     }
   }
 

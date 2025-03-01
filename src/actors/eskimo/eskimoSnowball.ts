@@ -1,6 +1,7 @@
 import { Ice } from '../ice/ice';
 import { Penguin } from '../penguin/penguin';
 import { Config } from '@/config';
+import { Resources } from '@/resources';
 import * as ex from 'excalibur';
 
 export class EskimoSnowball extends ex.Actor {
@@ -11,29 +12,28 @@ export class EskimoSnowball extends ex.Actor {
   constructor(private position: ex.Vector, private player: Penguin) {
     super({
       pos: position,
-      radius: Config.Snowball.Radius,
+      radius: Config.EskimoSnowball.Radius,
       color: ex.Color.White,
       z: 3,
     });
     this.player = player;
     this.trajectory = player.pos.sub(position);
-    this.currentRadius = Config.Snowball.Radius;
+    this.currentRadius = Config.EskimoSnowball.Radius;
   }
 
   override onInitialize(engine: ex.Engine): void {
     // Normalize the trajectory to get a direction
     const direction = this.trajectory.normalize();
 
-    // TODO: Move this to config
-    const initialSpeed = 400;
+    const initialSpeed = Config.EskimoSnowball.InitialSpeed;
     this.vel = direction.scale(initialSpeed);
 
     // Negate the direction so acceleration is opposite of velocity
-    this.acc = direction.negate().scale(Config.Snowball.Deceleration);
+    this.acc = direction.negate().scale(Config.EskimoSnowball.Deceleration);
 
     engine.clock.schedule(() => {
       this.melting = true;
-    }, Config.Snowball.SecondsUntilMelt * 1000);
+    }, Config.EskimoSnowball.SecondsUntilMelt * 1000);
 
     this.on('exitviewport', () => {
       this.kill();
@@ -82,7 +82,7 @@ export class EskimoSnowball extends ex.Actor {
       new ex.Circle({
         radius: this.currentRadius,
         color: ex.Color.White,
-        opacity: this.currentRadius / Config.Snowball.Radius,
+        opacity: this.currentRadius / Config.EskimoSnowball.Radius,
       }),
     );
 

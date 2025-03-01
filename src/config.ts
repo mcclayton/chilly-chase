@@ -22,6 +22,12 @@ export const Config = {
     Deceleration: 300,
     SecondsUntilMelt: 2,
   },
+  EskimoSnowball: {
+    Radius: 4,
+    InitialSpeed: 350,
+    Deceleration: 300,
+    SecondsUntilMelt: 2,
+  },
   Seal: {
     Velocity: 60,
     FreezeTimeSeconds: 3,

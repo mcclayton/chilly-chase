@@ -2,7 +2,7 @@ import { Penguin } from '../penguin/penguin';
 import { ScorePopup } from '../scorePopup/scorePopup';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
-import { Level } from '@/scenes/level';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class Fish extends ex.Actor {
@@ -13,7 +13,7 @@ export class Fish extends ex.Actor {
 
   private pointsLevel: 'max' | 'middle' | 'min' = 'max';
 
-  constructor(private level: Level, pos: ex.Vector) {
+  constructor(private game: Game, pos: ex.Vector) {
     super({
       pos,
       width: 16,
@@ -52,18 +52,18 @@ export class Fish extends ex.Actor {
       if (this.pointsLevel === 'max') {
         const points = 30;
         const popup = new ScorePopup(this.pos.clone(), points);
-        this.level.add(popup);
-        this.level.scoreTracker.increment(points);
+        this.game.add(popup);
+        this.game.scoreTracker.increment(points);
       } else if (this.pointsLevel === 'middle') {
         const points = 20;
         const popup = new ScorePopup(this.pos.clone(), points);
-        this.level.add(popup);
-        this.level.scoreTracker.increment(points);
+        this.game.add(popup);
+        this.game.scoreTracker.increment(points);
       } else {
         const points = 10;
         const popup = new ScorePopup(this.pos.clone(), points);
-        this.level.add(popup);
-        this.level.scoreTracker.increment(points);
+        this.game.add(popup);
+        this.game.scoreTracker.increment(points);
       }
       this.kill();
     }
