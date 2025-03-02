@@ -149,7 +149,6 @@ export class Game extends ex.Scene {
       Config.BackgroundMusic.InitialPlaybackSpeed;
 
     this.gameOverLabel.graphics.isVisible = true;
-    this.gameOverSubLabel.graphics.isVisible = true;
 
     // Update best score on game over
     if (this.best < this.scoreTracker.score) {
@@ -158,13 +157,16 @@ export class Game extends ex.Scene {
       this.newHighScore.graphics.isVisible = true;
     }
 
-    this.engine.input.pointers.once('down', () => {
-      this.reset();
-      this.newHighScore.graphics.isVisible = false;
-      this.gameOverLabel.graphics.isVisible = false;
-      this.gameOverSubLabel.graphics.isVisible = false;
-      this.start();
-    });
+    setTimeout(() => {
+      this.gameOverSubLabel.graphics.isVisible = true;
+      this.engine.input.pointers.once('down', () => {
+        this.reset();
+        this.newHighScore.graphics.isVisible = false;
+        this.gameOverLabel.graphics.isVisible = false;
+        this.gameOverSubLabel.graphics.isVisible = false;
+        this.start();
+      });
+    }, 1000);
   }
 
   reset() {

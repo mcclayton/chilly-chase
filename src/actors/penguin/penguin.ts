@@ -26,10 +26,12 @@ export class Penguin extends ex.Actor {
 
   override onInitialize(engine: ex.Engine): void {
     engine.input.pointers.primary.on('down', (evt) => {
-      Resources.SnowballThrow.playbackRate = Math.random() * 0.3 + 0.7;
-      Resources.SnowballThrow.play(1);
-      const snowball = new Snowball(this.game, evt.worldPos.sub(this.pos));
-      this.game.add(snowball);
+      if (this.game.gameState === 'playing') {
+        Resources.SnowballThrow.playbackRate = Math.random() * 0.3 + 0.7;
+        Resources.SnowballThrow.play(1);
+        const snowball = new Snowball(this.game, evt.worldPos.sub(this.pos));
+        this.game.add(snowball);
+      }
     });
 
     this.initSprites();
