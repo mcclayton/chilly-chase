@@ -11,7 +11,8 @@ export class ScoreTracker extends ex.ScreenElement {
       text: `Score: ${this.score}`,
       color: ex.Color.White,
       font: new ex.Font({
-        size: 20,
+        family: `"Jacquarda Bastarda 9", serif`,
+        size: 24,
         color: ex.Color.White,
         textAlign: ex.TextAlign.Left,
       }),

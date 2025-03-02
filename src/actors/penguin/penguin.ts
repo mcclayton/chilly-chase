@@ -52,7 +52,12 @@ export class Penguin extends ex.Actor {
     this.timeSinceLastIce += deltaSeconds;
 
     // Spacebar
-    if (engine.input.keyboard.isHeld(ex.Keys.Space) && this.hasIceInMeter()) {
+    if (
+      engine.input.keyboard.isHeld(ex.Keys.Space) &&
+      this.hasIceInMeter() &&
+      // Ensure player is moving
+      this.vel.magnitude > 50
+    ) {
       this.timeSinceLastIce += deltaSeconds;
       this.timeSinceSpacePress = 0; // reset refill idle timer
 

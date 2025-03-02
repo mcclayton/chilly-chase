@@ -21,8 +21,8 @@ export class IceMeter extends ex.ScreenElement {
     this.backgroundRect = new ex.Rectangle({
       width: this.barWidth,
       height: this.barHeight,
-      color: ex.Color.Black,
-      strokeColor: ex.Color.fromHex('#ffffff'),
+      color: ex.Color.fromHex('#082b90'),
+      strokeColor: ex.Color.fromHex('#082b90'),
       lineWidth: 3,
     });
 
@@ -35,7 +35,7 @@ export class IceMeter extends ex.ScreenElement {
 
     this.topFillLine = new ex.Rectangle({
       width: this.barWidth - border,
-      height: 3,
+      height: 12,
       color: ex.Color.White,
       opacity: 0.2,
     });
@@ -52,11 +52,14 @@ export class IceMeter extends ex.ScreenElement {
       text: 'Ice:',
       color: ex.Color.White,
       font: new ex.Font({
-        size: 20,
+        family: `"Jacquarda Bastarda 9", serif`,
+        size: 24,
         color: ex.Color.White,
         textAlign: ex.TextAlign.Left,
       }),
     });
+
+    const SPACE_BETWEEN_TEXT_AND_METER = 55;
 
     const group = new ex.GraphicsGroup({
       members: [
@@ -66,19 +69,22 @@ export class IceMeter extends ex.ScreenElement {
         },
         {
           graphic: this.backgroundRect,
-          offset: ex.vec(42 + 3 - border / 2, 0 + 3 - border / 2),
+          offset: ex.vec(
+            SPACE_BETWEEN_TEXT_AND_METER + 3 - border / 2,
+            0 + 3 - border / 2,
+          ),
         },
         {
           graphic: this.fillRect,
-          offset: ex.vec(42 + 3, 0 + 3),
+          offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, 0 + 3),
         },
         {
           graphic: this.topFillLine,
-          offset: ex.vec(42 + 3, 0 + 3),
+          offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, 0 + 3),
         },
         {
           graphic: this.bottomFillLine,
-          offset: ex.vec(42 + 3, this.barHeight - 2),
+          offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, this.barHeight - 2),
         },
       ],
     });

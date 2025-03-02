@@ -65,7 +65,7 @@ export class Fish extends ex.Actor {
         this.game.add(popup);
         this.game.scoreTracker.increment(points);
       }
-      Resources.FishCollect.playbackRate = 0.4;
+      Resources.FishCollect.playbackRate = 0.3;
       Resources.FishCollect.play(0.3);
       this.kill();
     }
@@ -115,6 +115,7 @@ export class Fish extends ex.Actor {
         radius * Math.sin(angle),
       );
 
+      ctx.opacity = 0.7;
       // Greater than 2/3
       if (this.arcRemaining > (4 * Math.PI) / 3) {
         this.pointsLevel = 'max';

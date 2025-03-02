@@ -28,8 +28,9 @@ export class Game extends ex.Scene {
     y: 200,
     z: OVERLAY_Z,
     font: new ex.Font({
-      family: 'Impact',
-      size: 30,
+      family: `"Jacquarda Bastarda 9", serif`,
+      size: 40,
+      bold: true,
       color: ex.Color.Red,
       textAlign: ex.TextAlign.Center,
     }),
@@ -40,7 +41,7 @@ export class Game extends ex.Scene {
     y: 250,
     z: OVERLAY_Z,
     font: new ex.Font({
-      family: 'Impact',
+      family: `"Jacquarda Bastarda 9", serif`,
       size: 15,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
@@ -49,11 +50,12 @@ export class Game extends ex.Scene {
 
   bestLabel = new ex.Label({
     text: 'Best: 0',
-    x: 325,
+    x: 335,
     y: 0,
     z: OVERLAY_Z,
     font: new ex.Font({
-      size: 20,
+      family: `"Jacquarda Bastarda 9", serif`,
+      size: 24,
       color: ex.Color.White,
       textAlign: ex.TextAlign.End,
     }),
@@ -65,7 +67,7 @@ export class Game extends ex.Scene {
     y: 270,
     z: OVERLAY_Z,
     font: new ex.Font({
-      family: 'Impact',
+      family: `"Jacquarda Bastarda 9", serif`,
       size: 16,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
@@ -82,7 +84,7 @@ export class Game extends ex.Scene {
 
     this.scoreTracker = new ScoreTracker(25, 0, OVERLAY_Z);
 
-    const iceMeter = new IceMeter(425, 0, OVERLAY_Z);
+    const iceMeter = new IceMeter(420, 0, OVERLAY_Z);
     this.iceMeter = iceMeter;
     this.add(iceMeter);
 

@@ -17,7 +17,9 @@ export const Resources = {
   IceBlock: new ex.ImageSource('./images/ice.png'),
   IceBackground: new ex.ImageSource('./images/ice_background.png'),
   Fishes: new ex.ImageSource('./images/fishes.png'),
-  Instructions: new ex.ImageSource('./images/instructions.png'),
+  InstructionsEntities: new ex.ImageSource(
+    './images/instructions_entities.png',
+  ),
 
   // Sounds
   BackgroundMusic: new ex.Sound('./sounds/background_music.mp3'),

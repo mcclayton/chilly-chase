@@ -12,8 +12,9 @@ export class Instructions extends ex.Scene {
     y: 10,
     z: OVERLAY_Z,
     font: new ex.Font({
-      family: 'Impact',
-      size: 30,
+      family: `"Jacquarda Bastarda 9", serif`,
+      size: 40,
+      bold: true,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
     }),
@@ -25,14 +26,14 @@ export class Instructions extends ex.Scene {
     y: 400,
     z: OVERLAY_Z,
     font: new ex.Font({
-      family: 'Impact',
+      family: `"Jacquarda Bastarda 9", serif`,
       size: 30,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
     }),
   });
 
-  instructionsMenu = new InstructionsMenu(0, 50, 100);
+  instructionsMenu = new InstructionsMenu(this, 0, 50, 100);
 
   override onInitialize(engine: ex.Engine): void {
     const background = new TiledBackground(engine);
