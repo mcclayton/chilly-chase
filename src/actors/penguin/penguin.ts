@@ -14,6 +14,7 @@ export class Penguin extends ex.Actor {
   startSprite!: ex.Sprite;
   private timeSinceLastIce = 0;
   private timeSinceSpacePress = 0;
+  private iceCrackling = false;
 
   constructor(private game: Game) {
     super({
@@ -49,11 +50,23 @@ export class Penguin extends ex.Actor {
       this.timeSinceLastIce += deltaSeconds;
       this.timeSinceSpacePress = 0; // reset refill idle timer
 
+      if (!this.iceCrackling) {
+        Resources.IceCrackling.loop = true;
+        Resources.IceCrackling.playbackRate = 0.7;
+        Resources.IceCrackling.play(0.1);
+        this.iceCrackling = true;
+      }
+
       // If it's time to drop ice
       if (this.timeSinceLastIce >= 0.05) {
         this.dropIceBlock();
       }
     } else {
+      if (this.iceCrackling) {
+        Resources.IceCrackling.stop();
+        this.iceCrackling = false;
+      }
+
       // If spacebar NOT held or there is no ice in meter, accumulate idle time
       this.timeSinceSpacePress += deltaSeconds;
 

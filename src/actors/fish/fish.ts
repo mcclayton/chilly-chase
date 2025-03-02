@@ -65,6 +65,8 @@ export class Fish extends ex.Actor {
         this.game.add(popup);
         this.game.scoreTracker.increment(points);
       }
+      Resources.FishCollect.playbackRate = 0.4;
+      Resources.FishCollect.play(0.3);
       this.kill();
     }
   }

@@ -20,6 +20,7 @@ export class Game extends ex.Scene {
   best: number = 0;
   iceMeter!: IceMeter;
   scoreTracker!: ScoreTracker;
+  gameState: 'paused' | 'playing' | 'stopped' = 'playing';
 
   gameOverLabel = new ex.Label({
     text: 'Game Over',
@@ -89,10 +90,7 @@ export class Game extends ex.Scene {
 
     // Start the game
     this.reset();
-    this.sealFactory.start();
-    this.eskimoFactory.start();
-    this.fishFactory.start();
-    this.player.start();
+    this.start();
   }
 
   override onActivate(): void {
@@ -110,14 +108,16 @@ export class Game extends ex.Scene {
     this.sealFactory.update(delta);
     this.eskimoFactory.update(delta);
 
-    // Gradually increase playback rate
-    const totalTime = 100000;
-    const rateIncrement = 0.4 / totalTime;
-    if (Resources.BackgroundMusic.playbackRate < 1) {
-      Resources.BackgroundMusic.playbackRate = Math.min(
-        1,
-        Resources.BackgroundMusic.playbackRate + rateIncrement * delta,
-      );
+    // Gradually increase playback rate of background music
+    if (this.gameState === 'playing') {
+      const totalTime = 100000;
+      const rateIncrement = 0.4 / totalTime;
+      if (Resources.BackgroundMusic.playbackRate < 1) {
+        Resources.BackgroundMusic.playbackRate = Math.min(
+          1,
+          Resources.BackgroundMusic.playbackRate + rateIncrement * delta,
+        );
+      }
     }
   }
 
@@ -135,13 +135,11 @@ export class Game extends ex.Scene {
     }
 
     this.engine.input.pointers.once('down', () => {
+      this.gameState = 'playing';
       this.reset();
       this.gameOverLabel.graphics.isVisible = false;
       this.gameOverSubLabel.graphics.isVisible = false;
-      this.sealFactory.start();
-      this.eskimoFactory.start();
-      this.fishFactory.start();
-      this.player.start();
+      this.start();
     });
   }
 
@@ -156,11 +154,24 @@ export class Game extends ex.Scene {
     this.scoreTracker.reset();
   }
 
-  triggerGameOver() {
+  start() {
+    this.sealFactory.start();
+    this.eskimoFactory.start();
+    this.fishFactory.start();
+    this.player.start();
+    this.gameState = 'playing';
+  }
+
+  stop() {
     this.sealFactory.stop();
     this.eskimoFactory.stop();
     this.fishFactory.stop();
     this.player.stop();
+    this.gameState = 'stopped';
+  }
+
+  triggerGameOver() {
+    this.stop();
     this.showGameOver();
   }
 

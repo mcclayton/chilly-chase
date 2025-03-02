@@ -1,3 +1,4 @@
+import { Resources } from '@/resources';
 import * as ex from 'excalibur';
 
 export class ScorePopup extends ex.Actor {
