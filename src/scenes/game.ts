@@ -140,6 +140,7 @@ export class Game extends ex.Scene {
       Resources.BackgroundMusic.pause();
       alert('The game has been paused.');
       Resources.BackgroundMusic.play();
+      this.gameState = 'playing';
     }
   }
 

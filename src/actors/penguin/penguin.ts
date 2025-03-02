@@ -41,7 +41,11 @@ export class Penguin extends ex.Actor {
   }
 
   override onPostUpdate(engine: ex.Engine, delta: number): void {
-    if (this.game.gameState !== 'playing') return;
+    if (this.game.gameState !== 'playing') {
+      Resources.IceCrackling.stop();
+      this.iceCrackling = false;
+      return;
+    }
 
     // Accumulate time since last ice creation
     const deltaSeconds = delta / 1000;

@@ -8,6 +8,8 @@ export class IceMeter extends ex.ScreenElement {
   private currentValue: number = 1; // Number between 0 and 1 where 1 = 100%
 
   private fillRect: ex.Rectangle;
+  private topFillLine: ex.Rectangle;
+  private bottomFillLine: ex.Rectangle;
   private backgroundRect: ex.Rectangle;
 
   constructor(x: number, y: number, z: number) {
@@ -20,17 +22,29 @@ export class IceMeter extends ex.ScreenElement {
       width: this.barWidth,
       height: this.barHeight,
       color: ex.Color.Black,
-      strokeColor: ex.Color.White,
-      lineWidth: 2,
+      strokeColor: ex.Color.fromHex('#ffffff'),
+      lineWidth: 3,
     });
 
     this.fillRect = new ex.Rectangle({
       width: this.barWidth - border,
       height: this.barHeight - border,
       color: ex.Color.fromHex('#96bdf8'),
-      strokeColor: ex.Color.Black,
-      lineWidth: 2,
       opacity: 1,
+    });
+
+    this.topFillLine = new ex.Rectangle({
+      width: this.barWidth - border,
+      height: 3,
+      color: ex.Color.White,
+      opacity: 0.2,
+    });
+
+    this.bottomFillLine = new ex.Rectangle({
+      width: this.barWidth - border,
+      height: 3,
+      color: ex.Color.fromHex('#124cec'),
+      opacity: 0.4,
     });
 
     // Label text
@@ -58,6 +72,14 @@ export class IceMeter extends ex.ScreenElement {
           graphic: this.fillRect,
           offset: ex.vec(42 + 3, 0 + 3),
         },
+        {
+          graphic: this.topFillLine,
+          offset: ex.vec(42 + 3, 0 + 3),
+        },
+        {
+          graphic: this.bottomFillLine,
+          offset: ex.vec(42 + 3, this.barHeight - 2),
+        },
       ],
     });
 
@@ -69,19 +91,28 @@ export class IceMeter extends ex.ScreenElement {
     this.currentValue = ex.clamp(this.currentValue - value, 0, 1);
 
     // Update fill rectangle width
-    this.fillRect.width = this.barWidth * this.currentValue;
+    const newVal = (this.barWidth - border) * this.currentValue;
+    this.fillRect.width = newVal;
+    this.topFillLine.width = newVal;
+    this.bottomFillLine.width = newVal;
   }
 
   public increment(value: number) {
     this.currentValue = ex.clamp(this.currentValue + value, 0, 1);
     // Update fill rectangle width
-    this.fillRect.width = this.barWidth * this.currentValue;
+    const newVal = (this.barWidth - border) * this.currentValue;
+    this.fillRect.width = newVal;
+    this.topFillLine.width = newVal;
+    this.bottomFillLine.width = newVal;
   }
 
   public reset() {
     this.currentValue = 1;
     // Update fill rectangle width
-    this.fillRect.width = this.barWidth * this.currentValue;
+    const newVal = (this.barWidth - border) * this.currentValue;
+    this.fillRect.width = newVal;
+    this.topFillLine.width = newVal;
+    this.bottomFillLine.width = newVal;
   }
 
   public value() {
