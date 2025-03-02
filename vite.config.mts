@@ -8,6 +8,7 @@ const PORT = 3000;
 export default defineConfig((env) => {
   process.env = { ...process.env, ...loadEnv(env.mode, process.cwd()) };
   return {
+    base: '/chilly-chase/',
     logLevel: 'warn',
     server: {
       port: PORT,
