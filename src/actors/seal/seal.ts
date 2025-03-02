@@ -68,6 +68,8 @@ export class Seal extends ex.Actor {
         this.game.add(popup);
         this.game.scoreTracker.increment(points);
       }
+      Resources.Thud.playbackRate = Math.random() * 0.3 + 0.7;
+      Resources.Thud.play(0.6);
       this.kill();
     }
 

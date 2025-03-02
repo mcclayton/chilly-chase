@@ -119,6 +119,13 @@ export class Game extends ex.Scene {
         );
       }
     }
+
+    if (engine.input.keyboard.isHeld(ex.Keys.Esc)) {
+      this.gameState = 'paused';
+      Resources.BackgroundMusic.pause();
+      alert('The game has been paused.');
+      Resources.BackgroundMusic.play();
+    }
   }
 
   showGameOver() {
@@ -135,7 +142,6 @@ export class Game extends ex.Scene {
     }
 
     this.engine.input.pointers.once('down', () => {
-      this.gameState = 'playing';
       this.reset();
       this.gameOverLabel.graphics.isVisible = false;
       this.gameOverSubLabel.graphics.isVisible = false;

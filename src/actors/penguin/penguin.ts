@@ -9,7 +9,6 @@ import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class Penguin extends ex.Actor {
-  playing = false;
   walkAnimation!: ex.Animation;
   startSprite!: ex.Sprite;
   private timeSinceLastIce = 0;
@@ -27,8 +26,9 @@ export class Penguin extends ex.Actor {
 
   override onInitialize(engine: ex.Engine): void {
     engine.input.pointers.primary.on('down', (evt) => {
+      Resources.SnowballThrow.playbackRate = Math.random() * 0.3 + 0.7;
       Resources.SnowballThrow.play(1);
-      const snowball = new Snowball(this, evt.worldPos.sub(this.pos));
+      const snowball = new Snowball(this.game, evt.worldPos.sub(this.pos));
       this.game.add(snowball);
     });
 
@@ -39,7 +39,7 @@ export class Penguin extends ex.Actor {
   }
 
   override onPostUpdate(engine: ex.Engine, delta: number): void {
-    if (!this.playing) return;
+    if (this.game.gameState !== 'playing') return;
 
     // Accumulate time since last ice creation
     const deltaSeconds = delta / 1000;
@@ -150,7 +150,6 @@ export class Penguin extends ex.Actor {
   }
 
   start() {
-    this.playing = true;
     this.pos = Config.Player.StartPos; // starting position
     this.acc = ex.vec(0, 0); // pixels per second per second
   }
@@ -169,7 +168,6 @@ export class Penguin extends ex.Actor {
   }
 
   stop() {
-    this.playing = false;
     this.vel = ex.vec(0, 0);
     this.acc = ex.vec(0, 0);
   }

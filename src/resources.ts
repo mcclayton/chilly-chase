@@ -24,4 +24,5 @@ export const Resources = {
   SnowballThrow: new ex.Sound('./sounds/snowball_throw.mp3'),
   IceCrackling: new ex.Sound('./sounds/ice_crackling.mp3'),
   FishCollect: new ex.Sound('./sounds/points.mp3'),
+  Thud: new ex.Sound('./sounds/thud.mp3'),
 } as const;

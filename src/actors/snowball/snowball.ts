@@ -3,20 +3,21 @@ import { Penguin } from '../penguin/penguin';
 import { Seal } from '../seal/seal';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class Snowball extends ex.Actor {
   private melting = false;
   private currentRadius;
 
-  constructor(private player: Penguin, private trajectory: ex.Vector) {
+  constructor(private game: Game, private trajectory: ex.Vector) {
+    const player = game.player;
     super({
       pos: player.pos.add(new ex.Vector(0, -5)),
       radius: Config.Snowball.Radius,
       color: ex.Color.White,
       z: 3,
     });
-    this.player = player;
     this.trajectory = trajectory;
     this.currentRadius = Config.Snowball.Radius;
   }
