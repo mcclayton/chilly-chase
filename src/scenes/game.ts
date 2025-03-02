@@ -59,6 +59,19 @@ export class Game extends ex.Scene {
     }),
   });
 
+  newHighScore = new ex.Label({
+    text: 'New High Score',
+    x: 348,
+    y: 270,
+    z: OVERLAY_Z,
+    font: new ex.Font({
+      family: 'Impact',
+      size: 16,
+      color: ex.Color.White,
+      textAlign: ex.TextAlign.Center,
+    }),
+  });
+
   override onInitialize(engine: ex.Engine): void {
     const background = new TiledBackground(engine);
     this.add(background);
@@ -77,8 +90,10 @@ export class Game extends ex.Scene {
     this.add(this.bestLabel);
     this.add(this.gameOverLabel);
     this.add(this.gameOverSubLabel);
+    this.add(this.newHighScore);
     this.gameOverLabel.graphics.isVisible = false;
     this.gameOverSubLabel.graphics.isVisible = false;
+    this.newHighScore.graphics.isVisible = false;
 
     const bestScore = localStorage.getItem('bestScore');
     if (bestScore) {
@@ -139,10 +154,13 @@ export class Game extends ex.Scene {
     // Update best score on game over
     if (this.best < this.scoreTracker.score) {
       this.setBestScore(this.scoreTracker.score);
+      this.newHighScore.text = `——————————————————————\nNew High Score\n⭐️ ${this.scoreTracker.score} ⭐️`;
+      this.newHighScore.graphics.isVisible = true;
     }
 
     this.engine.input.pointers.once('down', () => {
       this.reset();
+      this.newHighScore.graphics.isVisible = false;
       this.gameOverLabel.graphics.isVisible = false;
       this.gameOverSubLabel.graphics.isVisible = false;
       this.start();
