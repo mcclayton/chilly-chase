@@ -10,7 +10,7 @@ export const Config = {
     RefillRate: 0.2,
   },
   Player: {
-    StartPos: ex.vec(200, 300),
+    StartPos: ex.vec(350, 250),
     Acceleration: 5,
     Deceleration: 1,
     MinVelocity: -200,
