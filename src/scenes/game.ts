@@ -173,7 +173,9 @@ export class Game extends ex.Scene {
     // Update best score on game over
     if (this.best < this.scoreTracker.score) {
       this.setBestScore(this.scoreTracker.score);
-      this.newHighScore.text = `\nNew High Score\n⭐️ ${this.scoreTracker.score} ⭐️`;
+      this.newHighScore.text = `\nNew High Score\n⭐️ ${this.scoreTracker.score.toLocaleString(
+        'en-US',
+      )} ⭐️`;
       this.separator.graphics.isVisible = true;
       this.newHighScore.graphics.isVisible = true;
     }

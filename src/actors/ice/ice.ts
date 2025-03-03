@@ -10,18 +10,20 @@ export class Ice extends ex.Actor {
   constructor(private game: Game) {
     super({
       pos: game.player.pos,
-      width: 12,
-      height: 12,
+      width: 16,
+      height: 16,
       z: 1,
     });
     this.currentHeight = 12;
   }
 
   override onInitialize(engine: ex.Engine): void {
-    const iceBlock = Resources.IceBlock.toSprite();
-    iceBlock.height = 16;
-    iceBlock.width = 16;
-    iceBlock.opacity = 0.2;
+    const iceBlock = Resources.IceBlock.toSprite({
+      height: 16,
+      width: 16,
+      opacity: 0.2,
+    });
+
     this.iceBlockSprite = iceBlock;
     this.graphics.use(this.iceBlockSprite);
 
