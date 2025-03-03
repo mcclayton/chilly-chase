@@ -11,6 +11,7 @@ export class IceMeter extends ex.ScreenElement {
   private topFillLine: ex.Rectangle;
   private bottomFillLine: ex.Rectangle;
   private backgroundRect: ex.Rectangle;
+  private highlightLine: ex.Rectangle;
 
   constructor(x: number, y: number, z: number) {
     super({ x, y, z });
@@ -37,14 +38,24 @@ export class IceMeter extends ex.ScreenElement {
       width: this.barWidth - border,
       height: 12,
       color: ex.Color.White,
-      opacity: 0.2,
+      opacity: 0.1,
     });
 
     this.bottomFillLine = new ex.Rectangle({
       width: this.barWidth - border,
       height: 3,
-      color: ex.Color.fromHex('#124cec'),
-      opacity: 0.4,
+      color: ex.Color.fromHex('#051e65'),
+      opacity: 0.2,
+    });
+
+    this.highlightLine = new ex.Rectangle({
+      width: this.barWidth - 40,
+      height: 4,
+      color: ex.Color.White,
+      opacity: 0.1,
+      strokeColor: ex.Color.White,
+      lineCap: 'round',
+      lineWidth: 4,
     });
 
     // Label text
@@ -79,12 +90,16 @@ export class IceMeter extends ex.ScreenElement {
           offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, 0 + 3),
         },
         {
+          graphic: this.bottomFillLine,
+          offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, this.barHeight - 2),
+        },
+        {
           graphic: this.topFillLine,
           offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, 0 + 3),
         },
         {
-          graphic: this.bottomFillLine,
-          offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 3, this.barHeight - 2),
+          graphic: this.highlightLine,
+          offset: ex.vec(SPACE_BETWEEN_TEXT_AND_METER + 20, 0 + 5),
         },
       ],
     });
@@ -99,8 +114,6 @@ export class IceMeter extends ex.ScreenElement {
     // Update fill rectangle width
     const newVal = (this.barWidth - border) * this.currentValue;
     this.fillRect.width = newVal;
-    this.topFillLine.width = newVal;
-    this.bottomFillLine.width = newVal;
   }
 
   public increment(value: number) {
@@ -108,8 +121,6 @@ export class IceMeter extends ex.ScreenElement {
     // Update fill rectangle width
     const newVal = (this.barWidth - border) * this.currentValue;
     this.fillRect.width = newVal;
-    this.topFillLine.width = newVal;
-    this.bottomFillLine.width = newVal;
   }
 
   public reset() {
@@ -117,8 +128,6 @@ export class IceMeter extends ex.ScreenElement {
     // Update fill rectangle width
     const newVal = (this.barWidth - border) * this.currentValue;
     this.fillRect.width = newVal;
-    this.topFillLine.width = newVal;
-    this.bottomFillLine.width = newVal;
   }
 
   public value() {

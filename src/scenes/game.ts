@@ -42,7 +42,8 @@ export class Game extends ex.Scene {
     z: OVERLAY_Z,
     font: new ex.Font({
       family: `"Jacquarda Bastarda 9", serif`,
-      size: 15,
+      size: 18,
+      bold: true,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
     }),
@@ -61,6 +62,19 @@ export class Game extends ex.Scene {
     }),
   });
 
+  separator = new ex.Label({
+    text: '——————————————————————',
+    x: 348,
+    y: 270,
+    z: OVERLAY_Z,
+    font: new ex.Font({
+      family: 'Impact',
+      size: 14,
+      color: ex.Color.White,
+      textAlign: ex.TextAlign.Center,
+    }),
+  });
+
   newHighScore = new ex.Label({
     text: 'New High Score',
     x: 348,
@@ -68,7 +82,8 @@ export class Game extends ex.Scene {
     z: OVERLAY_Z,
     font: new ex.Font({
       family: `"Jacquarda Bastarda 9", serif`,
-      size: 16,
+      size: 22,
+      bold: true,
       color: ex.Color.White,
       textAlign: ex.TextAlign.Center,
     }),
@@ -92,9 +107,11 @@ export class Game extends ex.Scene {
     this.add(this.bestLabel);
     this.add(this.gameOverLabel);
     this.add(this.gameOverSubLabel);
+    this.add(this.separator);
     this.add(this.newHighScore);
     this.gameOverLabel.graphics.isVisible = false;
     this.gameOverSubLabel.graphics.isVisible = false;
+    this.separator.graphics.isVisible = false;
     this.newHighScore.graphics.isVisible = false;
 
     const bestScore = localStorage.getItem('bestScore');
@@ -156,7 +173,8 @@ export class Game extends ex.Scene {
     // Update best score on game over
     if (this.best < this.scoreTracker.score) {
       this.setBestScore(this.scoreTracker.score);
-      this.newHighScore.text = `——————————————————————\nNew High Score\n⭐️ ${this.scoreTracker.score} ⭐️`;
+      this.newHighScore.text = `\nNew High Score\n⭐️ ${this.scoreTracker.score} ⭐️`;
+      this.separator.graphics.isVisible = true;
       this.newHighScore.graphics.isVisible = true;
     }
 
@@ -164,6 +182,7 @@ export class Game extends ex.Scene {
       this.gameOverSubLabel.graphics.isVisible = true;
       this.engine.input.pointers.once('down', () => {
         this.reset();
+        this.separator.graphics.isVisible = false;
         this.newHighScore.graphics.isVisible = false;
         this.gameOverLabel.graphics.isVisible = false;
         this.gameOverSubLabel.graphics.isVisible = false;
