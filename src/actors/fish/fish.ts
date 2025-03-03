@@ -130,7 +130,6 @@ export class Fish extends ex.Actor {
       }
 
       // Draw a line segment from the previous point to the current point
-      // ctx.drawLine(previousPoint, currentPoint, ex.Color.Yellow, 2);
       previousPoint = currentPoint;
     }
 
