@@ -40,7 +40,7 @@ export class Eskimo extends ex.Actor {
     this.timeSinceLastEskimoSnowball += dt;
 
     if (this.timeSinceLastEskimoSnowball > 3 && !this.isFrozen()) {
-      const snowball = new EskimoSnowball(this.pos.clone(), this.game.player);
+      const snowball = new EskimoSnowball(this.game, this.pos.clone());
       this.game.add(snowball);
       this.timeSinceLastEskimoSnowball = 0;
     }

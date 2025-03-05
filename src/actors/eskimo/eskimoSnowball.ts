@@ -1,23 +1,23 @@
 import { Ice } from '../ice/ice';
 import { Penguin } from '../penguin/penguin';
 import { Config } from '@/config';
-import { Resources } from '@/resources';
+import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
 export class EskimoSnowball extends ex.Actor {
   private melting = false;
   private currentRadius;
   private trajectory: ex.Vector;
+  private snowExplosionEmitter!: ex.ParticleEmitter;
 
-  constructor(private position: ex.Vector, private player: Penguin) {
+  constructor(private game: Game, private position: ex.Vector) {
     super({
       pos: position,
       radius: Config.EskimoSnowball.Radius,
       color: ex.Color.White,
       z: 3,
     });
-    this.player = player;
-    this.trajectory = player.pos.sub(position);
+    this.trajectory = game.player.pos.sub(position);
     this.currentRadius = Config.EskimoSnowball.Radius;
   }
 
@@ -52,6 +52,28 @@ export class EskimoSnowball extends ex.Actor {
     });
     this.addChild(snowEmitter);
 
+    this.snowExplosionEmitter = new ex.ParticleEmitter({
+      x: 0,
+      y: 0,
+      emitterType: ex.EmitterType.Circle,
+      emitRate: 30,
+      isEmitting: false,
+      particle: {
+        acc: new ex.Vector(0, 0),
+        minAngle: 0,
+        maxAngle: 6.2,
+        minSpeed: 0.1,
+        maxSpeed: 15,
+        opacity: 0.8,
+        minSize: 1,
+        maxSize: 4,
+        beginColor: ex.Color.White,
+        endColor: ex.Color.fromHex('#96bdf8'),
+        fade: true,
+      },
+    });
+    this.addChild(this.snowExplosionEmitter);
+
     this.on('exitviewport', () => {
       this.kill();
     });
@@ -73,7 +95,22 @@ export class EskimoSnowball extends ex.Actor {
   }
 
   override onCollisionStart(_self: ex.Collider, other: ex.Collider): void {
-    if (other.owner instanceof Penguin || other.owner instanceof Ice) {
+    if (other.owner instanceof Penguin) {
+      if (this.vel.magnitude > 5) {
+        // Turn on the snow explosion emitter for just a moment after collision
+        // Slow down the explosion for dramatic effect since this cuases the game over
+        this.snowExplosionEmitter.emitRate = 30;
+        this.snowExplosionEmitter.particle.acc = new ex.Vector(0, 0);
+        this.snowExplosionEmitter.particle.maxSpeed = 15;
+        this.snowExplosionEmitter.isEmitting = true;
+        this.game.engine.clock.schedule(() => {
+          this.snowExplosionEmitter.isEmitting = false;
+        }, 5000);
+      }
+      this.stop();
+    }
+
+    if (other.owner instanceof Ice) {
       this.stop();
     }
   }
