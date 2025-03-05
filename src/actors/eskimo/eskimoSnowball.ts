@@ -8,6 +8,7 @@ export class EskimoSnowball extends ex.Actor {
   private melting = false;
   private currentRadius;
   private trajectory: ex.Vector;
+  private snowEmitter!: ex.ParticleEmitter;
   private snowExplosionEmitter!: ex.ParticleEmitter;
 
   constructor(private game: Game, private position: ex.Vector) {
@@ -35,7 +36,7 @@ export class EskimoSnowball extends ex.Actor {
       this.melting = true;
     }, Config.EskimoSnowball.SecondsUntilMelt * 1000);
 
-    const snowEmitter = new ex.ParticleEmitter({
+    this.snowEmitter = new ex.ParticleEmitter({
       x: 0,
       y: 0,
       radius: 0.001,
@@ -50,7 +51,7 @@ export class EskimoSnowball extends ex.Actor {
         fade: true,
       },
     });
-    this.addChild(snowEmitter);
+    this.addChild(this.snowEmitter);
 
     this.snowExplosionEmitter = new ex.ParticleEmitter({
       x: 0,
@@ -90,6 +91,7 @@ export class EskimoSnowball extends ex.Actor {
     }
 
     if (this.melting) {
+      this.snowEmitter.isEmitting = false;
       this.melt(delta);
     }
   }
