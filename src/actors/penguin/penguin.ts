@@ -14,6 +14,7 @@ export class Penguin extends ex.Actor {
   private timeSinceLastIce = 0;
   private timeSinceSpacePress = 0;
   private iceCrackling = false;
+  private snowEmitter!: ex.ParticleEmitter;
 
   constructor(private game: Game) {
     super({
@@ -35,6 +36,24 @@ export class Penguin extends ex.Actor {
     });
 
     this.initSprites();
+
+    this.snowEmitter = new ex.ParticleEmitter({
+      x: 0,
+      y: 0,
+      radius: 0.001,
+      emitterType: ex.EmitterType.Circle, // Shape of emitter nozzle
+      emitRate: 60,
+      particle: {
+        opacity: 0.2,
+        minSize: 10,
+        maxSize: 15,
+        beginColor: ex.Color.White,
+        endColor: ex.Color.fromHex('#96bdf8'),
+        fade: true,
+      },
+    });
+    this.addChild(this.snowEmitter);
+
     this.on('exitviewport', () => {
       this.game.triggerGameOver();
     });
@@ -44,8 +63,13 @@ export class Penguin extends ex.Actor {
     if (this.game.gameState !== 'playing') {
       Resources.IceCrackling.stop();
       this.iceCrackling = false;
+      this.snowEmitter.isEmitting = false;
       return;
     }
+
+    this.snowEmitter.isEmitting =
+      (this.vel.magnitude < 100 && this.vel.magnitude !== 0) ||
+      this.vel.magnitude > 200;
 
     // Accumulate time since last ice creation
     const deltaSeconds = delta / 1000;

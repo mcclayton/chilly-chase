@@ -1,8 +1,6 @@
 import { Eskimo } from '../eskimo/eskimo';
-import { Penguin } from '../penguin/penguin';
 import { Seal } from '../seal/seal';
 import { Config } from '@/config';
-import { Resources } from '@/resources';
 import { Game } from '@/scenes/game';
 import * as ex from 'excalibur';
 
@@ -35,6 +33,24 @@ export class Snowball extends ex.Actor {
     engine.clock.schedule(() => {
       this.melting = true;
     }, Config.Snowball.SecondsUntilMelt * 1000);
+
+    const snowEmitter = new ex.ParticleEmitter({
+      x: 0,
+      y: 0,
+      radius: 0.001,
+      emitterType: ex.EmitterType.Circle,
+      emitRate: 60,
+      isEmitting: true,
+      particle: {
+        opacity: 0.4,
+        minSize: 1,
+        maxSize: 10,
+        beginColor: ex.Color.White,
+        endColor: ex.Color.fromHex('#96bdf8'),
+        fade: true,
+      },
+    });
+    this.addChild(snowEmitter);
 
     this.on('exitviewport', () => {
       this.kill();

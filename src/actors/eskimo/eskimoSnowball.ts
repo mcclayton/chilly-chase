@@ -35,6 +35,23 @@ export class EskimoSnowball extends ex.Actor {
       this.melting = true;
     }, Config.EskimoSnowball.SecondsUntilMelt * 1000);
 
+    const snowEmitter = new ex.ParticleEmitter({
+      x: 0,
+      y: 0,
+      radius: 0.001,
+      emitterType: ex.EmitterType.Circle, // Shape of emitter nozzle
+      emitRate: 60,
+      particle: {
+        opacity: 0.3,
+        minSize: 1,
+        maxSize: 10,
+        beginColor: ex.Color.White,
+        endColor: ex.Color.fromHex('#96bdf8'),
+        fade: true,
+      },
+    });
+    this.addChild(snowEmitter);
+
     this.on('exitviewport', () => {
       this.kill();
     });
