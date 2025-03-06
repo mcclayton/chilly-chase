@@ -2,6 +2,7 @@ import { Penguin } from '../actors/penguin/penguin';
 import { EskimoFactory } from '@/actors/eskimo/eskimoFactory';
 import { FishFactory } from '@/actors/fish/fishFactory';
 import { SealFactory } from '@/actors/seal/sealFactory';
+import { Snow } from '@/actors/snow/snow';
 import { Config } from '@/config';
 import { Resources } from '@/resources';
 import { IceMeter } from '@/screenElements/iceMeter/iceMeter';
@@ -90,6 +91,9 @@ export class Game extends ex.Scene {
   });
 
   override onInitialize(engine: ex.Engine): void {
+    const snow = new Snow(this, new ex.Vector(0, 0));
+    this.add(snow);
+
     const background = new TiledBackground(engine);
     this.add(background);
 

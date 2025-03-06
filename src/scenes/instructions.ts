@@ -1,3 +1,4 @@
+import { Snow } from '@/actors/snow/snow';
 import { Resources } from '@/resources';
 import { InstructionsMenu } from '@/screenElements/instructionsMenu/instructionsMenu';
 import { TiledBackground } from '@/screenElements/tileBackground/tiledBackground';
@@ -41,6 +42,9 @@ export class Instructions extends ex.Scene {
     this.add(this.chillyChaseLabel);
     this.add(this.instructionsMenu);
     this.add(this.startGameLabel);
+
+    const snow = new Snow(this, new ex.Vector(0, 0));
+    this.add(snow);
 
     const spriteSheet = ex.SpriteSheet.fromImageSource({
       image: Resources.PenguinWalk,
